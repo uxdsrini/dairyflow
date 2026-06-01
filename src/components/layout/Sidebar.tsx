@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Users, CalendarCheck, Package, Truck, UserCog,
-  ClipboardList, Wallet, FileText, CreditCard, BarChart3, X, Milk
+  ClipboardList, Wallet, FileText, CreditCard, BarChart3, X, Milk, DollarSign
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -21,6 +21,7 @@ const navItems = [
   { to: '/salaries', icon: Wallet, label: 'Salaries' },
   { to: '/billing', icon: FileText, label: 'Billing' },
   { to: '/payments', icon: CreditCard, label: 'Payments' },
+  { to: '/expenses', icon: DollarSign, label: 'Expenses' },
   { to: '/reports', icon: BarChart3, label: 'Reports' },
 ];
 

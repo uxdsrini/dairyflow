@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart3, Users, DollarSign, Wallet, FileSpreadsheet, ChevronRight, AlertTriangle, Download, Calendar } from 'lucide-react';
-import { Invoice, Payment, Salary } from '../types';
+import { Invoice, Payment, Salary, Expense, EXPENSE_CATEGORY_LABELS } from '../types';
 import { getInvoices } from '../services/billingService';
 import { getPayments } from '../services/paymentService';
 import { getSalaries } from '../services/salaryService';
+import { getExpenses } from '../services/expenseService';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
@@ -15,6 +16,7 @@ const Reports: React.FC = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [salaries, setSalaries] = useState<Salary[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Export filters
@@ -32,7 +34,8 @@ const Reports: React.FC = () => {
       const results = await Promise.allSettled([
         getInvoices(),
         getPayments(),
-        getSalaries()
+        getSalaries(),
+        getExpenses()
       ]);
 
       if (results[0].status === 'fulfilled') {
@@ -51,8 +54,12 @@ const Reports: React.FC = () => {
 
       if (results[2].status === 'fulfilled') {
         setSalaries(results[2].value);
+      }
+
+      if (results[3].status === 'fulfilled') {
+        setExpenses(results[3].value);
       } else {
-        console.error('Failed to load salaries:', results[2].reason);
+        console.error('Failed to load salaries:', (results[2] as any).reason);
         toast.error('Failed to load salaries');
       }
     } catch (err) {
@@ -241,7 +248,24 @@ const Reports: React.FC = () => {
   const totalCollected = invoices.reduce((acc, i) => acc + i.paidAmount, 0);
   const outstandingDues = invoices.reduce((acc, i) => acc + i.pendingAmount, 0);
   const salaryExpenses = salaries.reduce((acc, s) => acc + s.netSalary, 0);
-  const netEstimatedProfit = totalBilled - salaryExpenses;
+  const totalBusinessExpenses = expenses.reduce((acc, e) => acc + e.amount, 0);
+  
+  // Calculate expense breakdown by category
+  const expenseByCategory: Record<string, number> = {};
+  expenses.forEach(exp => {
+    if (!expenseByCategory[exp.category]) {
+      expenseByCategory[exp.category] = 0;
+    }
+    expenseByCategory[exp.category] += exp.amount;
+  });
+  
+  // Get Feed & Maintenance expenses (MVP highlight)
+  const feedMaintenanceExpenses = (expenseByCategory['feed'] || 0) + (expenseByCategory['maintenance'] || 0);
+  
+  // Total expenses = business expenses + salary expenses
+  const totalAllExpenses = totalBusinessExpenses + salaryExpenses;
+  
+  const netEstimatedProfit = totalBilled - totalAllExpenses;
 
   // Group outstanding dues by customer name
   const customerDues: Record<string, { pending: number, total: number }> = {};
@@ -397,11 +421,13 @@ const Reports: React.FC = () => {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-500">Feed & Maintenance:</span>
-              <strong className="text-gray-900">₹0 (MVP)</strong>
+              <strong className={feedMaintenanceExpenses > 0 ? "text-gray-900 font-semibold" : "text-gray-500"}>
+                ₹{feedMaintenanceExpenses.toLocaleString()}
+              </strong>
             </div>
             <div className="flex justify-between text-sm pt-2 border-t border-dashed border-gray-150">
               <span className="text-gray-500">Total Expense:</span>
-              <strong className="text-rose-700">₹{salaryExpenses.toLocaleString()}</strong>
+              <strong className="text-rose-700">₹{(totalBusinessExpenses).toLocaleString()}</strong>
             </div>
           </div>
         </div>
@@ -421,10 +447,10 @@ const Reports: React.FC = () => {
               <strong>₹{totalBilled.toLocaleString()}</strong>
             </div>
             <div className="flex justify-between text-sm text-white/90">
-              <span>Total Expense:</span>
-              <strong>₹{salaryExpenses.toLocaleString()}</strong>
+              <span>Total Expenses:</span>
+              <strong>₹{totalAllExpenses.toLocaleString()}</strong>
             </div>
-            <div className="flex justify-between text-base pt-2 border-t border-white/20 font-bold">
+            <div className={`flex justify-between text-base pt-2 border-t border-white/20 font-bold ${netEstimatedProfit >= 0 ? 'text-emerald-300' : 'text-red-300'}`}>
               <span>Estimated Profit:</span>
               <span className="text-lg">₹{netEstimatedProfit.toLocaleString()}</span>
             </div>

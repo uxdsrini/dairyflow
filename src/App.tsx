@@ -14,6 +14,7 @@ import Salaries from './pages/Salaries';
 import Billing from './pages/Billing';
 import Payments from './pages/Payments';
 import Reports from './pages/Reports';
+import Expenses from './pages/Expenses';
 import { Toaster } from 'react-hot-toast';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -56,6 +57,7 @@ const AppRoutes: React.FC = () => {
         <Route path="salaries" element={<Salaries />} />
         <Route path="billing" element={<Billing />} />
         <Route path="payments" element={<Payments />} />
+        <Route path="expenses" element={<Expenses />} />
         <Route path="reports" element={<Reports />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

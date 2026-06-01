@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Users, CalendarCheck, Truck, TrendingUp, Clock, CheckCircle2, Wallet, PiggyBank
+  Users, CalendarCheck, Truck, TrendingUp, Clock, CheckCircle2, Wallet, PiggyBank, DollarSign
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { getDashboardStats } from '../services/dashboardService';
@@ -15,6 +15,7 @@ interface Stats {
   paidAmount: number;
   pendingAmount: number;
   salaryExpense: number;
+  totalExpenses: number;
   netProfit: number;
 }
 
@@ -42,7 +43,7 @@ const Dashboard: React.FC = () => {
   const s = stats || {
     totalCustomers: 0, activeSubscriptions: 0, todayDeliveries: 0,
     deliveredToday: 0, monthlyRevenue: 0, paidAmount: 0,
-    pendingAmount: 0, salaryExpense: 0, netProfit: 0,
+    pendingAmount: 0, salaryExpense: 0, totalExpenses: 0, netProfit: 0,
   };
 
   const statCards = [
@@ -53,6 +54,7 @@ const Dashboard: React.FC = () => {
     { label: 'Pending Payments', value: `₹${s.pendingAmount.toLocaleString()}`, icon: Clock, color: 'from-amber-500 to-amber-600', bg: 'bg-amber-50' },
     { label: 'Paid Amount', value: `₹${s.paidAmount.toLocaleString()}`, icon: CheckCircle2, color: 'from-teal-500 to-teal-600', bg: 'bg-teal-50' },
     { label: 'Salary Expense', value: `₹${s.salaryExpense.toLocaleString()}`, icon: Wallet, color: 'from-rose-500 to-rose-600', bg: 'bg-rose-50' },
+    { label: 'Total Expenses', value: `₹${s.totalExpenses.toLocaleString()}`, icon: DollarSign, color: 'from-red-500 to-red-600', bg: 'bg-red-50' },
     { label: 'Net Profit', value: `₹${s.netProfit.toLocaleString()}`, icon: PiggyBank, color: 'from-cyan-500 to-cyan-600', bg: 'bg-cyan-50' },
   ];
 

@@ -1,6 +1,23 @@
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
+export const getTotalExpenses = async (month: number, year: number): Promise<number> => {
+  try {
+    const expenses = await getDocs(collection(db, 'expenses'));
+    return expenses.docs.reduce((total, doc) => {
+      const exp = doc.data();
+      const expDate = exp.expenseDate?.toDate ? exp.expenseDate.toDate() : new Date();
+      if (expDate.getMonth() === month - 1 && expDate.getFullYear() === year) {
+        return total + (exp.amount || 0);
+      }
+      return total;
+    }, 0);
+  } catch (err) {
+    console.error('Failed to get total expenses:', err);
+    return 0;
+  }
+};
+
 export const getDashboardStats = async () => {
   const today = new Date().toISOString().split('T')[0];
   const currentMonth = new Date().getMonth() + 1;
@@ -46,6 +63,9 @@ export const getDashboardStats = async () => {
     salaryExpense += d.data().netSalary || 0;
   });
 
+  // Get total expenses for the month
+  const totalExpenses = await getTotalExpenses(currentMonth, currentYear);
+
   return {
     totalCustomers,
     activeSubscriptions,
@@ -55,7 +75,8 @@ export const getDashboardStats = async () => {
     paidAmount,
     pendingAmount,
     salaryExpense,
-    netProfit: monthlyRevenue - salaryExpense,
+    totalExpenses,
+    netProfit: monthlyRevenue - totalExpenses - salaryExpense,
   };
 };
 

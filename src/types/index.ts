@@ -143,6 +143,22 @@ export interface Invoice {
 
 export type RouteOption = string;
 
+
+export interface Expense {
+  id: string;
+  title: string;
+  category: 'transportation' | 'feed' | 'medicine' | 'maintenance' | 'worker_advance' | 'electricity' | 'water' | 'packaging' | 'fuel' | 'equipment_repair' | 'rent' | 'other';
+  amount: number;
+  expenseDate: Timestamp;
+  paymentMethod: 'cash' | 'upi' | 'bank_transfer';
+  vendorName?: string;
+  notes?: string;
+  attachmentUrl?: string;
+  createdBy: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
 export const MILK_TYPES = ['cow', 'buffalo', 'a2', 'mixed'] as const;
 export const FREQUENCIES = ['daily', 'alternate', 'weekly', 'monthly'] as const;
 export const CUSTOMER_TYPES = ['residential', 'commercial', 'wholesale'] as const;
@@ -172,4 +188,39 @@ export const FREQUENCY_LABELS: Record<string, string> = {
   alternate: 'Alternate Day',
   weekly: 'Weekly',
   monthly: 'Monthly',
+};
+
+export const EXPENSE_CATEGORIES = [
+  'transportation', 'feed', 'medicine', 'maintenance', 'worker_advance',
+  'electricity', 'water', 'packaging', 'fuel', 'equipment_repair', 'rent', 'other'
+] as const;
+
+export const EXPENSE_CATEGORY_LABELS: Record<string, string> = {
+  transportation: 'Transportation',
+  feed: 'Cattle Feed',
+  medicine: 'Medicine',
+  maintenance: 'Farm Maintenance',
+  worker_advance: 'Worker Advance',
+  electricity: 'Electricity',
+  water: 'Water',
+  packaging: 'Packaging',
+  fuel: 'Fuel',
+  equipment_repair: 'Equipment Repair',
+  rent: 'Rent',
+  other: 'Other Expenses',
+};
+
+export const EXPENSE_COLORS: Record<string, string> = {
+  transportation: 'from-blue-500 to-blue-600',
+  feed: 'from-green-500 to-green-600',
+  medicine: 'from-red-500 to-red-600',
+  maintenance: 'from-yellow-500 to-yellow-600',
+  worker_advance: 'from-purple-500 to-purple-600',
+  electricity: 'from-amber-500 to-amber-600',
+  water: 'from-cyan-500 to-cyan-600',
+  packaging: 'from-pink-500 to-pink-600',
+  fuel: 'from-orange-500 to-orange-600',
+  equipment_repair: 'from-violet-500 to-violet-600',
+  rent: 'from-indigo-500 to-indigo-600',
+  other: 'from-gray-500 to-gray-600',
 };
