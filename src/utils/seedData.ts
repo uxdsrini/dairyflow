@@ -1,0 +1,129 @@
+import { Timestamp } from 'firebase/firestore';
+
+export const products = [
+  { id: 'prod_1', name: 'Cow Milk', unit: 'Litre', pricePerUnit: 60, category: 'Milk' },
+  { id: 'prod_2', name: 'Buffalo Milk', unit: 'Litre', pricePerUnit: 70, category: 'Milk' },
+  { id: 'prod_3', name: 'Curd', unit: 'Kg', pricePerUnit: 80, category: 'Dairy' },
+  { id: 'prod_4', name: 'Ghee', unit: 'Kg', pricePerUnit: 650, category: 'Dairy' },
+  { id: 'prod_5', name: 'Paneer', unit: 'Kg', pricePerUnit: 350, category: 'Dairy' }
+];
+
+export const workers = [
+  { id: 'work_1', name: 'Amit Singh', mobile: '9876543201', role: 'delivery_boy', salaryType: 'monthly', monthlySalary: 12000, status: 'active', joiningDate: Timestamp.now() },
+  { id: 'work_2', name: 'Ravi Kumar', mobile: '9876543202', role: 'delivery_boy', salaryType: 'monthly', monthlySalary: 11500, status: 'active', joiningDate: Timestamp.now() },
+  { id: 'work_3', name: 'Sita Ram', mobile: '9876543203', role: 'milking_worker', salaryType: 'monthly', monthlySalary: 10000, status: 'active', joiningDate: Timestamp.now() },
+  { id: 'work_4', name: 'Geeta Devi', mobile: '9876543204', role: 'cleaner', salaryType: 'daily', monthlySalary: 6000, status: 'active', joiningDate: Timestamp.now() },
+  { id: 'work_5', name: 'Vijay Sharma', mobile: '9876543205', role: 'manager', salaryType: 'monthly', monthlySalary: 20000, status: 'active', joiningDate: Timestamp.now() }
+];
+
+export const customers = [
+  { id: 'cust_1', name: 'Anil Gupta', mobile: '9812345601', address: 'Flat 101, Sunshine Apts, Sector 15', route: 'Sector 15', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_2', name: 'Sanjay Dutt', mobile: '9812345602', address: 'House 43, Road No 2, Sector 15', route: 'Sector 15', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_3', name: 'Meena Sharma', mobile: '9812345603', address: 'Flat 304, Royal Palms, Sector 16', route: 'Sector 16', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_4', name: 'Preeti Verma', mobile: '9812345604', address: 'House 12, Lane C, Sector 16', route: 'Sector 16', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_5', name: 'Vikram Malhotra', mobile: '9812345605', address: 'A-45, Green Meadows, Sector 17', route: 'Sector 17', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_6', name: 'Rajesh Nair', mobile: '9812345606', address: 'House 220, Sector 17', route: 'Sector 17', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_7', name: 'Arjun Kapoor', mobile: '9812345607', address: 'Flat 502, Skyview Residency, Sector 21', route: 'Sector 21', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_8', name: 'Kiran Bedi', mobile: '9812345608', address: 'House 88, Lane 1, Sector 21', route: 'Sector 21', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_9', name: 'Pooja Hegde', mobile: '9812345609', address: 'C-109, Grand Plaza, Sector 22', route: 'Sector 22', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_10', name: 'Vivek Oberoi', mobile: '9812345610', address: 'House 56, Sector 22', route: 'Sector 22', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_11', name: 'Royal Cafe', mobile: '9812345611', address: 'Shop 14, Main Market, Sector 15', route: 'Sector 15', customerType: 'commercial', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_12', name: 'Sweet Home Bakery', mobile: '9812345612', address: 'Shop 8, Food Plaza, Sector 16', route: 'Sector 16', customerType: 'commercial', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_13', name: 'Dairy Point', mobile: '9812345613', address: 'Shop 2, Junction Market, Sector 21', route: 'Sector 21', customerType: 'wholesale', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_14', name: 'Rohan Joshi', mobile: '9812345614', address: 'Flat 12, Block B, Sector 22', route: 'Sector 22', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_15', name: 'Aditi Rao', mobile: '9812345615', address: 'Villa 5, Silver Oak Estates, Sector 17', route: 'Sector 17', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_16', name: 'Neha Kakkar', mobile: '9812345616', address: 'Flat 701, Oasis Apts, Sector 21', route: 'Sector 21', customerType: 'residential', status: 'inactive', createdAt: Timestamp.now() },
+  { id: 'cust_17', name: 'Karan Johar', mobile: '9812345617', address: 'Penthouse B, Sky Towers, Sector 22', route: 'Sector 22', customerType: 'residential', status: 'inactive', createdAt: Timestamp.now() },
+  { id: 'cust_18', name: 'Delhi Sweets', mobile: '9812345618', address: 'Corner Stall, Sector 15 Market', route: 'Sector 15', customerType: 'wholesale', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_19', name: 'Sunil Shetty', mobile: '9812345619', address: 'House 19, Lane A, Sector 17', route: 'Sector 17', customerType: 'residential', status: 'active', createdAt: Timestamp.now() },
+  { id: 'cust_20', name: 'Alia Bhatt', mobile: '9812345620', address: 'Flat 405, Kapoor Nivas, Sector 16', route: 'Sector 16', customerType: 'residential', status: 'active', createdAt: Timestamp.now() }
+];
+
+export const subscriptions = [
+  { id: 'sub_1', customerId: 'cust_1', customerName: 'Anil Gupta', milkType: 'cow', quantityPerDay: 2, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 60, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_2', customerId: 'cust_2', customerName: 'Sanjay Dutt', milkType: 'buffalo', quantityPerDay: 1.5, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 70, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_3', customerId: 'cust_3', customerName: 'Meena Sharma', milkType: 'cow', quantityPerDay: 1, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 60, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_4', customerId: 'cust_4', customerName: 'Preeti Verma', milkType: 'a2', quantityPerDay: 2, frequency: 'alternate', startDate: Timestamp.now(), pricePerLitre: 80, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_5', customerId: 'cust_5', customerName: 'Vikram Malhotra', milkType: 'mixed', quantityPerDay: 3, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 55, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_6', customerId: 'cust_6', customerName: 'Rajesh Nair', milkType: 'cow', quantityPerDay: 1, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 60, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_7', customerId: 'cust_7', customerName: 'Arjun Kapoor', milkType: 'buffalo', quantityPerDay: 2, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 70, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_8', customerId: 'cust_8', customerName: 'Kiran Bedi', milkType: 'cow', quantityPerDay: 1.5, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 60, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_9', customerId: 'cust_9', customerName: 'Pooja Hegde', milkType: 'a2', quantityPerDay: 1, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 80, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_10', customerId: 'cust_10', customerName: 'Vivek Oberoi', milkType: 'cow', quantityPerDay: 2, frequency: 'alternate', startDate: Timestamp.now(), pricePerLitre: 60, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_11', customerId: 'cust_11', customerName: 'Royal Cafe', milkType: 'mixed', quantityPerDay: 10, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 50, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_12', customerId: 'cust_12', customerName: 'Sweet Home Bakery', milkType: 'buffalo', quantityPerDay: 8, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 65, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_13', customerId: 'cust_13', customerName: 'Dairy Point', milkType: 'mixed', quantityPerDay: 25, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 48, status: 'active', createdAt: Timestamp.now() },
+  { id: 'sub_14', customerId: 'cust_14', customerName: 'Rohan Joshi', milkType: 'cow', quantityPerDay: 1.5, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 60, status: 'paused', createdAt: Timestamp.now() },
+  { id: 'sub_15', customerId: 'cust_15', customerName: 'Aditi Rao', milkType: 'buffalo', quantityPerDay: 2, frequency: 'daily', startDate: Timestamp.now(), pricePerLitre: 70, status: 'active', createdAt: Timestamp.now() }
+];
+
+export const orders = [
+  { id: 'ord_1', customerId: 'cust_1', customerName: 'Anil Gupta', productId: 'prod_3', productName: 'Curd', quantity: 2, price: 160, orderDate: Timestamp.now(), orderStatus: 'delivered', paymentStatus: 'paid', createdAt: Timestamp.now() },
+  { id: 'ord_2', customerId: 'cust_3', customerName: 'Meena Sharma', productId: 'prod_4', productName: 'Ghee', quantity: 1, price: 650, orderDate: Timestamp.now(), orderStatus: 'delivered', paymentStatus: 'paid', createdAt: Timestamp.now() },
+  { id: 'ord_3', customerId: 'cust_5', customerName: 'Vikram Malhotra', productId: 'prod_5', productName: 'Paneer', quantity: 1.5, price: 525, orderDate: Timestamp.now(), orderStatus: 'delivered', paymentStatus: 'unpaid', createdAt: Timestamp.now() }
+];
+
+export const payments = [
+  { id: 'pay_1', customerId: 'cust_1', customerName: 'Anil Gupta', amount: 1500, method: 'upi', date: Timestamp.now(), notes: 'May Bill UPI', createdAt: Timestamp.now() },
+  { id: 'pay_2', customerId: 'cust_3', customerName: 'Meena Sharma', amount: 1200, method: 'cash', date: Timestamp.now(), notes: 'Handed to Ravi', createdAt: Timestamp.now() }
+];
+
+export const attendance = [
+  { id: 'att_1', workerId: 'work_1', workerName: 'Amit Singh', date: new Date().toISOString().split('T')[0], status: 'present' },
+  { id: 'att_2', workerId: 'work_2', workerName: 'Ravi Kumar', date: new Date().toISOString().split('T')[0], status: 'present' },
+  { id: 'att_3', workerId: 'work_3', workerName: 'Sita Ram', date: new Date().toISOString().split('T')[0], status: 'present' },
+  { id: 'att_4', workerId: 'work_4', workerName: 'Geeta Devi', date: new Date().toISOString().split('T')[0], status: 'half_day' },
+  { id: 'att_5', workerId: 'work_5', workerName: 'Vijay Sharma', date: new Date().toISOString().split('T')[0], status: 'present' }
+];
+
+export const deliveries = [
+  {
+    id: 'del_1',
+    date: new Date().toISOString().split('T')[0],
+    customerId: 'cust_1',
+    customerName: 'Anil Gupta',
+    customerAddress: 'Flat 101, Sunshine Apts, Sector 15',
+    type: 'subscription',
+    sourceId: 'sub_1',
+    items: [{ productName: 'Cow Milk', quantity: 2, unit: 'Litre' }],
+    route: 'Sector 15',
+    workerId: 'work_1',
+    workerName: 'Amit Singh',
+    status: 'delivered',
+    createdAt: Timestamp.now()
+  },
+  {
+    id: 'del_2',
+    date: new Date().toISOString().split('T')[0],
+    customerId: 'cust_2',
+    customerName: 'Sanjay Dutt',
+    customerAddress: 'House 43, Road No 2, Sector 15',
+    type: 'subscription',
+    sourceId: 'sub_2',
+    items: [{ productName: 'Buffalo Milk', quantity: 1.5, unit: 'Litre' }],
+    route: 'Sector 15',
+    workerId: 'work_1',
+    workerName: 'Amit Singh',
+    status: 'delivered',
+    createdAt: Timestamp.now()
+  }
+];
+
+export const invoices = [
+  {
+    id: 'inv_1',
+    customerId: 'cust_1',
+    customerName: 'Anil Gupta',
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear(),
+    items: [
+      { description: 'Cow Milk Subscription', quantity: 60, rate: 60, amount: 3600 },
+      { description: 'Curd One-time', quantity: 2, rate: 80, amount: 160 }
+    ],
+    totalAmount: 3760,
+    paidAmount: 1500,
+    pendingAmount: 2260,
+    status: 'partial',
+    createdAt: Timestamp.now()
+  }
+];
