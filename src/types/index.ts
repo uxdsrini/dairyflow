@@ -147,6 +147,7 @@ export type RouteOption = string;
 export interface Expense {
   id: string;
   title: string;
+  description?: string;
   category: 'transportation' | 'feed' | 'medicine' | 'maintenance' | 'worker_advance' | 'electricity' | 'water' | 'packaging' | 'fuel' | 'equipment_repair' | 'rent' | 'other';
   amount: number;
   expenseDate: Timestamp;
@@ -154,9 +155,24 @@ export interface Expense {
   vendorName?: string;
   notes?: string;
   attachmentUrl?: string;
+  source?: 'manual' | 'excel_import';
+  uploadedFileName?: string;
   createdBy: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
+}
+
+export interface ImportLog {
+  id: string;
+  type: 'expenses';
+  fileName: string;
+  totalRows: number;
+  importedRows: number;
+  skippedRows: number;
+  duplicateRows: number;
+  invalidRows: number;
+  uploadedBy: string;
+  uploadedAt: Timestamp;
 }
 
 export const MILK_TYPES = ['cow', 'buffalo', 'a2', 'mixed'] as const;

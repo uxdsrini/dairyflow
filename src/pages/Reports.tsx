@@ -250,18 +250,6 @@ const Reports: React.FC = () => {
   const salaryExpenses = salaries.reduce((acc, s) => acc + s.netSalary, 0);
   const totalBusinessExpenses = expenses.reduce((acc, e) => acc + e.amount, 0);
   
-  // Calculate expense breakdown by category
-  const expenseByCategory: Record<string, number> = {};
-  expenses.forEach(exp => {
-    if (!expenseByCategory[exp.category]) {
-      expenseByCategory[exp.category] = 0;
-    }
-    expenseByCategory[exp.category] += exp.amount;
-  });
-  
-  // Get Feed & Maintenance expenses (MVP highlight)
-  const feedMaintenanceExpenses = (expenseByCategory['feed'] || 0) + (expenseByCategory['maintenance'] || 0);
-  
   // Total expenses = business expenses + salary expenses
   const totalAllExpenses = totalBusinessExpenses + salaryExpenses;
   
@@ -420,14 +408,14 @@ const Reports: React.FC = () => {
               <strong className="text-rose-600">₹{salaryExpenses.toLocaleString()}</strong>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Feed & Maintenance:</span>
-              <strong className={feedMaintenanceExpenses > 0 ? "text-gray-900 font-semibold" : "text-gray-500"}>
-                ₹{feedMaintenanceExpenses.toLocaleString()}
+              <span className="text-gray-500">Business Expenses:</span>
+              <strong className={totalBusinessExpenses > 0 ? "text-gray-900 font-semibold" : "text-gray-500"}>
+                ₹{totalBusinessExpenses.toLocaleString()}
               </strong>
             </div>
             <div className="flex justify-between text-sm pt-2 border-t border-dashed border-gray-150">
               <span className="text-gray-500">Total Expense:</span>
-              <strong className="text-rose-700">₹{(totalBusinessExpenses).toLocaleString()}</strong>
+              <strong className="text-rose-700">₹{totalAllExpenses.toLocaleString()}</strong>
             </div>
           </div>
         </div>

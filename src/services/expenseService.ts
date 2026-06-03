@@ -1,11 +1,24 @@
 import {
   collection, doc, getDocs, addDoc, updateDoc, deleteDoc,
-  query, where, orderBy, Timestamp
+  query, where, orderBy, Timestamp, writeBatch, serverTimestamp
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { Expense } from '../types';
+import { Expense, ImportLog } from '../types';
 
 const COLLECTION = 'expenses';
+const IMPORT_LOGS_COLLECTION = 'import_logs';
+
+export type BulkExpenseInput = Omit<Expense, 'id' | 'createdAt' | 'updatedAt'>;
+
+export interface ExpenseImportLogInput {
+  fileName: string;
+  totalRows: number;
+  importedRows: number;
+  skippedRows: number;
+  duplicateRows: number;
+  invalidRows: number;
+  uploadedBy: string;
+}
 
 export const getExpenses = async (): Promise<Expense[]> => {
   const snapshot = await getDocs(collection(db, COLLECTION));
@@ -97,4 +110,60 @@ export const updateExpense = async (id: string, data: Partial<Expense>) => {
 
 export const deleteExpense = async (id: string) => {
   return deleteDoc(doc(db, COLLECTION, id));
+};
+
+export const bulkImportExpenses = async (
+  expenses: BulkExpenseInput[],
+  importLog: ExpenseImportLogInput
+) => {
+  const BATCH_LIMIT = 450;
+  let importedRows = 0;
+
+  for (let index = 0; index < expenses.length; index += BATCH_LIMIT) {
+    const batch = writeBatch(db);
+    const chunk = expenses.slice(index, index + BATCH_LIMIT);
+
+    chunk.forEach((expense) => {
+      const expenseRef = doc(collection(db, COLLECTION));
+      batch.set(expenseRef, {
+        ...expense,
+        id: expenseRef.id,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+    });
+
+    await batch.commit();
+    importedRows += chunk.length;
+  }
+
+  const logRef = doc(collection(db, IMPORT_LOGS_COLLECTION));
+  await writeBatch(db)
+    .set(logRef, {
+      id: logRef.id,
+      type: 'expenses',
+      ...importLog,
+      importedRows,
+      uploadedAt: serverTimestamp(),
+    })
+    .commit();
+
+  return { importedRows };
+};
+
+export const getRecentExpenseImportLogs = async (): Promise<ImportLog[]> => {
+  const snapshot = await getDocs(collection(db, IMPORT_LOGS_COLLECTION));
+  return snapshot.docs
+    .map((d) => ({ id: d.id, ...d.data() } as ImportLog))
+    .filter((log) => log.type === 'expenses')
+    .sort((a, b) => {
+      const dateA = a.uploadedAt?.toDate ? a.uploadedAt.toDate().getTime() : 0;
+      const dateB = b.uploadedAt?.toDate ? b.uploadedAt.toDate().getTime() : 0;
+      return dateB - dateA;
+    })
+    .slice(0, 5);
+};
+
+export const deleteExpenseImportLog = async (id: string) => {
+  return deleteDoc(doc(db, IMPORT_LOGS_COLLECTION, id));
 };
