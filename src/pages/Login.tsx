@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Milk, Eye, EyeOff, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -10,8 +10,16 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
-  const { login, register } = useAuth();
+  const { currentUser, loading: authLoading, login, register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: string } | null)?.from || '/';
+
+  useEffect(() => {
+    if (!authLoading && currentUser) {
+      navigate(from, { replace: true });
+    }
+  }, [authLoading, currentUser, from, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +41,7 @@ const Login: React.FC = () => {
         await login(email, password);
         toast.success('Welcome back!');
       }
-      navigate('/');
+      navigate(from, { replace: true });
     } catch (err: any) {
       const msg = err?.code === 'auth/user-not-found' ? 'No account found with this email'
         : err?.code === 'auth/wrong-password' ? 'Incorrect password'

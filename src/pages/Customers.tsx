@@ -13,7 +13,7 @@ const Customers: React.FC = () => {
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  const [typeFilter, setTypeFilter] = useState<'all' | 'residential' | 'commercial' | 'wholesale'>('all');
+  const [typeFilter, setTypeFilter] = useState<'all' | Customer['customerType']>('all');
   const [routeFilter, setRouteFilter] = useState('all');
 
   // Modal State
@@ -25,7 +25,7 @@ const Customers: React.FC = () => {
   const [mobile, setMobile] = useState('');
   const [address, setAddress] = useState('');
   const [route, setRoute] = useState('');
-  const [customerType, setCustomerType] = useState<'residential' | 'commercial' | 'wholesale'>('residential');
+  const [customerType, setCustomerType] = useState<Customer['customerType']>('residential');
   const [status, setStatus] = useState<'active' | 'inactive'>('active');
 
   const [saving, setSaving] = useState(false);
@@ -192,6 +192,7 @@ const Customers: React.FC = () => {
             <option value="residential">Residential</option>
             <option value="commercial">Commercial</option>
             <option value="wholesale">Wholesale</option>
+            <option value="regular">Regular</option>
           </select>
         </div>
 
@@ -388,6 +389,7 @@ const Customers: React.FC = () => {
                 <option value="residential">Residential</option>
                 <option value="commercial">Commercial</option>
                 <option value="wholesale">Wholesale</option>
+                <option value="regular">Regular</option>
               </select>
             </div>
           </div>

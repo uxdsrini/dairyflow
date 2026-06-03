@@ -6,8 +6,10 @@ export interface Customer {
   mobile: string;
   address: string;
   route: string;
-  customerType: 'residential' | 'commercial' | 'wholesale';
+  customerType: 'residential' | 'commercial' | 'wholesale' | 'regular';
   status: 'active' | 'inactive';
+  source?: 'payment_excel_import';
+  createdBy?: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -112,12 +114,19 @@ export interface Payment {
   id: string;
   customerId: string;
   customerName: string;
+  customerMobile?: string;
   amount: number;
   method: 'cash' | 'upi' | 'bank_transfer';
   date: Timestamp;
+  paymentDate?: string;
+  paymentMethod?: 'cash' | 'upi' | 'bank_transfer';
   invoiceId?: string;
   notes: string;
+  source?: 'manual' | 'excel_import';
+  uploadedFileName?: string;
+  createdBy?: string;
   createdAt: Timestamp;
+  updatedAt?: Timestamp;
 }
 
 export interface InvoiceItem {
@@ -164,13 +173,14 @@ export interface Expense {
 
 export interface ImportLog {
   id: string;
-  type: 'expenses';
+  type: 'expenses' | 'payments';
   fileName: string;
   totalRows: number;
   importedRows: number;
   skippedRows: number;
   duplicateRows: number;
   invalidRows: number;
+  newCustomersCreated?: number;
   uploadedBy: string;
   uploadedAt: Timestamp;
 }

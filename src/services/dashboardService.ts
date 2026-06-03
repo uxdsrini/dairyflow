@@ -53,10 +53,27 @@ export const getDashboardStats = async () => {
 
   invoices.docs.forEach((d) => {
     const data = d.data();
-    monthlyRevenue += data.totalAmount || 0;
-    paidAmount += data.paidAmount || 0;
     pendingAmount += data.pendingAmount || 0;
   });
+
+  payments.docs.forEach((d) => {
+    const data = d.data();
+    const paymentDate = data.date?.toDate
+      ? data.date.toDate()
+      : data.paymentDate
+        ? new Date(data.paymentDate)
+        : null;
+
+    if (
+      paymentDate &&
+      paymentDate.getMonth() === currentMonth - 1 &&
+      paymentDate.getFullYear() === currentYear
+    ) {
+      paidAmount += data.amount || 0;
+    }
+  });
+
+  monthlyRevenue = paidAmount;
 
   let salaryExpense = 0;
   salaries.docs.forEach((d) => {
@@ -76,7 +93,7 @@ export const getDashboardStats = async () => {
     pendingAmount,
     salaryExpense,
     totalExpenses,
-    netProfit: monthlyRevenue - totalExpenses - salaryExpense,
+    netProfit: paidAmount - totalExpenses - salaryExpense,
   };
 };
 

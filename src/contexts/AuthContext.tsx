@@ -5,6 +5,8 @@ import {
   signOut,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
 
@@ -25,10 +27,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   const login = async (email: string, password: string) => {
+    await setPersistence(auth, browserLocalPersistence);
     await signInWithEmailAndPassword(auth, email, password);
   };
 
   const register = async (email: string, password: string) => {
+    await setPersistence(auth, browserLocalPersistence);
     await createUserWithEmailAndPassword(auth, email, password);
   };
 
@@ -37,6 +41,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
+    setPersistence(auth, browserLocalPersistence).catch((err) => {
+      console.error('Failed to set auth persistence:', err);
+    });
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);

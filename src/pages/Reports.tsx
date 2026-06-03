@@ -245,7 +245,7 @@ const Reports: React.FC = () => {
 
   // Computations
   const totalBilled = invoices.reduce((acc, i) => acc + i.totalAmount, 0);
-  const totalCollected = invoices.reduce((acc, i) => acc + i.paidAmount, 0);
+  const totalCollected = payments.reduce((acc, p) => acc + p.amount, 0);
   const outstandingDues = invoices.reduce((acc, i) => acc + i.pendingAmount, 0);
   const salaryExpenses = salaries.reduce((acc, s) => acc + s.netSalary, 0);
   const totalBusinessExpenses = expenses.reduce((acc, e) => acc + e.amount, 0);
@@ -253,7 +253,7 @@ const Reports: React.FC = () => {
   // Total expenses = business expenses + salary expenses
   const totalAllExpenses = totalBusinessExpenses + salaryExpenses;
   
-  const netEstimatedProfit = totalBilled - totalAllExpenses;
+  const netEstimatedProfit = totalCollected - totalAllExpenses;
 
   // Group outstanding dues by customer name
   const customerDues: Record<string, { pending: number, total: number }> = {};
@@ -432,7 +432,7 @@ const Reports: React.FC = () => {
           <div className="space-y-2.5 pt-2">
             <div className="flex justify-between text-sm text-white/90">
               <span>Total Revenue:</span>
-              <strong>₹{totalBilled.toLocaleString()}</strong>
+              <strong>₹{totalCollected.toLocaleString()}</strong>
             </div>
             <div className="flex justify-between text-sm text-white/90">
               <span>Total Expenses:</span>
