@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Edit2, Trash2, Phone, MapPin, User, ChevronRight } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Phone, MapPin, Download } from 'lucide-react';
 import { Customer } from '../types';
 import { getCustomers, addCustomer, updateCustomer, deleteCustomer } from '../services/customerService';
 import Modal from '../components/ui/Modal';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
+import * as XLSX from 'xlsx';
+
+const CUSTOMER_TYPE_LABELS: Record<Customer['customerType'], string> = {
+  residential: 'Residential',
+  commercial: 'Commercial',
+  wholesale: 'Wholesale',
+  regular: 'Regular',
+};
+
+const STATUS_LABELS: Record<Customer['status'], string> = {
+  active: 'Active',
+  inactive: 'Inactive',
+};
 
 const Customers: React.FC = () => {
   const { currentUser } = useAuth();
@@ -144,6 +157,40 @@ const Customers: React.FC = () => {
     }
   };
 
+  const handleExportExcel = () => {
+    if (filteredCustomers.length === 0) {
+      toast.error('No customers to export');
+      return;
+    }
+
+    const rows = filteredCustomers.map((customer, index) => ({
+      'S.No': index + 1,
+      'Full Name': customer.name,
+      'Mobile Number': customer.mobile,
+      'Delivery Address': customer.address,
+      'Route / Area': customer.route,
+      'Customer Type': CUSTOMER_TYPE_LABELS[customer.customerType] || customer.customerType,
+      'Status': STATUS_LABELS[customer.status] || customer.status,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    worksheet['!cols'] = [
+      { wch: 8 },
+      { wch: 24 },
+      { wch: 16 },
+      { wch: 42 },
+      { wch: 22 },
+      { wch: 18 },
+      { wch: 12 },
+    ];
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Customers');
+    const fileName = `DairyFlow_Customers_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+    toast.success(`Downloaded ${fileName}`);
+  };
+
   // Extract unique routes for filter dropdown
   const uniqueRoutes = Array.from(new Set(customers.map((c) => c.route))).filter(Boolean);
 
@@ -154,9 +201,18 @@ const Customers: React.FC = () => {
           <h1 className="page-title">Customers</h1>
           <p className="text-sm text-gray-500 mt-1">Manage dairy customers, delivery routes, and details.</p>
         </div>
-        <button onClick={handleOpenAddModal} className="btn-primary flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Add Customer
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button
+            onClick={handleExportExcel}
+            disabled={filteredCustomers.length === 0}
+            className="btn-secondary flex items-center justify-center gap-2"
+          >
+            <Download className="w-4 h-4" /> Export Excel
+          </button>
+          <button onClick={handleOpenAddModal} className="btn-primary flex items-center justify-center gap-2">
+            <Plus className="w-4 h-4" /> Add Customer
+          </button>
+        </div>
       </div>
 
       {/* Filters Section */}

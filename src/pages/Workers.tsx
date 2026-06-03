@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit2, Trash2, Phone, Calendar, DollarSign, Briefcase } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Phone, Calendar, DollarSign, Briefcase, Download } from 'lucide-react';
 import { Worker, WORKER_ROLES, ROLE_LABELS } from '../types';
 import { getWorkers, addWorker, updateWorker, deleteWorker } from '../services/workerService';
 import Modal from '../components/ui/Modal';
@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { Timestamp } from 'firebase/firestore';
 import { formatFirestoreDate, getFirestoreISOString } from '../utils/dateUtils';
 import { useAuth } from '../contexts/AuthContext';
+import * as XLSX from 'xlsx';
 
 
 const Workers: React.FC = () => {
@@ -142,6 +143,35 @@ const Workers: React.FC = () => {
     }
   };
 
+  const handleExportExcel = () => {
+    if (filteredWorkers.length === 0) {
+      toast.error('No workers to export');
+      return;
+    }
+
+    const rows = filteredWorkers.map((worker, index) => ({
+      'S.No': index + 1,
+      'Worker Name': worker.name,
+      'Mobile Number': worker.mobile,
+      'Role': ROLE_LABELS[worker.role] || worker.role,
+      'Salary Type': worker.salaryType,
+      'Monthly Salary': worker.monthlySalary,
+      'Joining Date': formatFirestoreDate(worker.joiningDate),
+      'Status': worker.status,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    worksheet['!cols'] = [
+      { wch: 8 }, { wch: 24 }, { wch: 16 }, { wch: 20 },
+      { wch: 14 }, { wch: 16 }, { wch: 16 }, { wch: 12 },
+    ];
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Workers');
+    const fileName = `DairyFlow_Workers_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+    toast.success(`Downloaded ${fileName}`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="page-header">
@@ -149,9 +179,18 @@ const Workers: React.FC = () => {
           <h1 className="page-title">Workers</h1>
           <p className="text-sm text-gray-500 mt-1">Manage staff, delivery boys, cleaners, and drivers.</p>
         </div>
-        <button onClick={handleOpenAddModal} className="btn-primary flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Add Worker
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button
+            onClick={handleExportExcel}
+            disabled={filteredWorkers.length === 0}
+            className="btn-secondary flex items-center justify-center gap-2"
+          >
+            <Download className="w-4 h-4" /> Export Excel
+          </button>
+          <button onClick={handleOpenAddModal} className="btn-primary flex items-center justify-center gap-2">
+            <Plus className="w-4 h-4" /> Add Worker
+          </button>
+        </div>
       </div>
 
       <div className="card p-4 grid grid-cols-1 md:grid-cols-3 gap-3">

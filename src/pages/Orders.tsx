@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit2, Trash2, ShoppingBag, DollarSign, Calendar } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, ShoppingBag, DollarSign, Calendar, Download } from 'lucide-react';
 import { Order, Customer, ORDER_STATUSES, PAYMENT_STATUSES } from '../types';
 import { getOrders, addOrder, updateOrder, deleteOrder } from '../services/orderService';
 import { getCustomers } from '../services/customerService';
@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { Timestamp } from 'firebase/firestore';
 import { formatFirestoreDate, getFirestoreISOString } from '../utils/dateUtils';
 import { useAuth } from '../contexts/AuthContext';
+import * as XLSX from 'xlsx';
 
 
 const PRODUCTS = [
@@ -176,6 +177,35 @@ const Orders: React.FC = () => {
     }
   };
 
+  const handleExportExcel = () => {
+    if (filteredOrders.length === 0) {
+      toast.error('No orders to export');
+      return;
+    }
+
+    const rows = filteredOrders.map((order, index) => ({
+      'S.No': index + 1,
+      'Customer Name': order.customerName,
+      'Product Name': order.productName,
+      'Quantity': order.quantity,
+      'Total Price': order.price,
+      'Order Date': formatFirestoreDate(order.orderDate),
+      'Delivery Status': order.orderStatus,
+      'Payment Status': order.paymentStatus,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    worksheet['!cols'] = [
+      { wch: 8 }, { wch: 24 }, { wch: 18 }, { wch: 12 },
+      { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 18 },
+    ];
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
+    const fileName = `DairyFlow_Orders_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+    toast.success(`Downloaded ${fileName}`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="page-header">
@@ -183,13 +213,22 @@ const Orders: React.FC = () => {
           <h1 className="page-title">One-time Orders</h1>
           <p className="text-sm text-gray-500 mt-1">Record and manage one-time sales of dairy products.</p>
         </div>
-        <button
-          onClick={handleOpenAddModal}
-          disabled={customers.length === 0}
-          className="btn-primary flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" /> New Order
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button
+            onClick={handleExportExcel}
+            disabled={filteredOrders.length === 0}
+            className="btn-secondary flex items-center justify-center gap-2"
+          >
+            <Download className="w-4 h-4" /> Export Excel
+          </button>
+          <button
+            onClick={handleOpenAddModal}
+            disabled={customers.length === 0}
+            className="btn-primary flex items-center justify-center gap-2"
+          >
+            <Plus className="w-4 h-4" /> New Order
+          </button>
+        </div>
       </div>
 
       <div className="card p-4 grid grid-cols-1 md:grid-cols-3 gap-3">

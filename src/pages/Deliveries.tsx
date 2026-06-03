@@ -199,23 +199,23 @@ const Deliveries: React.FC = () => {
           <h1 className="page-title">Delivery Tracking</h1>
           <p className="text-sm text-gray-500 mt-1">Generate lists, track statuses, and assign delivery boys.</p>
         </div>
-        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-[160px_auto_auto] gap-2 w-full lg:w-auto lg:justify-end">
           <input
             type="date"
-            className="input-field max-w-[160px] py-2 px-3"
+            className="input-field w-full xl:w-[160px] py-2 px-3"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
           <button
             onClick={handleExportExcel}
-            className="flex items-center gap-1.5 text-sm py-2 px-3 rounded-lg font-semibold border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
+            className="flex items-center justify-center gap-1.5 text-sm py-2 px-3 rounded-lg font-semibold border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors whitespace-nowrap"
             title="Export deliveries to Excel"
           >
             <FileSpreadsheet className="w-4 h-4" /> Export Excel
           </button>
           <button
             onClick={handleGenerateDeliveries}
-            className="btn-primary flex items-center gap-1.5 text-sm py-2 px-3"
+            className="btn-primary flex items-center justify-center gap-1.5 text-sm py-2 px-3 sm:col-span-2 xl:col-span-1 whitespace-nowrap"
           >
             <Plus className="w-4 h-4" /> Generate Deliveries
           </button>

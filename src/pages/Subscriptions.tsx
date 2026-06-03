@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Edit2, Trash2, CalendarCheck, CalendarRange, Milk, Sparkles, AlertCircle } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, CalendarCheck, CalendarRange, Milk, Sparkles, AlertCircle, Download } from 'lucide-react';
 import { Subscription, Customer, MILK_TYPES, FREQUENCIES, MILK_TYPE_LABELS, FREQUENCY_LABELS } from '../types';
 import { getSubscriptions, addSubscription, updateSubscription, deleteSubscription, pauseSubscription, resumeSubscription } from '../services/subscriptionService';
 import { getCustomers } from '../services/customerService';
@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { Timestamp } from 'firebase/firestore';
 import { formatFirestoreDate, getFirestoreISOString } from '../utils/dateUtils';
 import { useAuth } from '../contexts/AuthContext';
+import * as XLSX from 'xlsx';
 
 
 const Subscriptions: React.FC = () => {
@@ -172,6 +173,36 @@ const Subscriptions: React.FC = () => {
     }
   };
 
+  const handleExportExcel = () => {
+    if (filteredSubscriptions.length === 0) {
+      toast.error('No subscriptions to export');
+      return;
+    }
+
+    const rows = filteredSubscriptions.map((subscription, index) => ({
+      'S.No': index + 1,
+      'Customer Name': subscription.customerName,
+      'Milk Type': MILK_TYPE_LABELS[subscription.milkType],
+      'Quantity Per Day': subscription.quantityPerDay,
+      'Frequency': FREQUENCY_LABELS[subscription.frequency],
+      'Start Date': formatFirestoreDate(subscription.startDate),
+      'Price Per Litre': subscription.pricePerLitre,
+      'Estimated Daily Amount': subscription.quantityPerDay * subscription.pricePerLitre,
+      'Status': subscription.status,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    worksheet['!cols'] = [
+      { wch: 8 }, { wch: 24 }, { wch: 18 }, { wch: 18 }, { wch: 18 },
+      { wch: 16 }, { wch: 16 }, { wch: 22 }, { wch: 12 },
+    ];
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Subscriptions');
+    const fileName = `DairyFlow_Subscriptions_${new Date().toISOString().split('T')[0]}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+    toast.success(`Downloaded ${fileName}`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="page-header">
@@ -179,13 +210,22 @@ const Subscriptions: React.FC = () => {
           <h1 className="page-title">Milk Subscriptions</h1>
           <p className="text-sm text-gray-500 mt-1">Manage recurring milk subscriptions, milk types, and prices.</p>
         </div>
-        <button
-          onClick={handleOpenAddModal}
-          disabled={customers.length === 0}
-          className="btn-primary flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" /> New Subscription
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button
+            onClick={handleExportExcel}
+            disabled={filteredSubscriptions.length === 0}
+            className="btn-secondary flex items-center justify-center gap-2"
+          >
+            <Download className="w-4 h-4" /> Export Excel
+          </button>
+          <button
+            onClick={handleOpenAddModal}
+            disabled={customers.length === 0}
+            className="btn-primary flex items-center justify-center gap-2"
+          >
+            <Plus className="w-4 h-4" /> New Subscription
+          </button>
+        </div>
       </div>
 
       {customers.length === 0 && !loading && (

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, CheckCircle2, XCircle, AlertCircle, Award, Sparkles, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar, CheckCircle2, XCircle, AlertCircle, Award, Sparkles, Filter, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { Worker, Attendance } from '../types';
 import { getWorkers } from '../services/workerService';
 import { getAttendanceByDate, markAttendance } from '../services/attendanceService';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
+import * as XLSX from 'xlsx';
 
 const AttendancePage: React.FC = () => {
   const { currentUser } = useAuth();
@@ -70,6 +71,34 @@ const AttendancePage: React.FC = () => {
   const halfDayCount = attendances.filter(a => a.status === 'half_day').length;
   const leaveCount = attendances.filter(a => a.status === 'leave').length;
 
+  const handleExportExcel = () => {
+    if (workers.length === 0) {
+      toast.error('No attendance data to export');
+      return;
+    }
+
+    const rows = workers.map((worker, index) => {
+      const attendance = attendances.find((item) => item.workerId === worker.id);
+      return {
+        'S.No': index + 1,
+        'Date': date,
+        'Worker Name': worker.name,
+        'Role': worker.role.replace('_', ' '),
+        'Status': attendance ? attendance.status.replace('_', ' ') : 'not marked',
+      };
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    worksheet['!cols'] = [
+      { wch: 8 }, { wch: 14 }, { wch: 24 }, { wch: 20 }, { wch: 16 },
+    ];
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance');
+    const fileName = `DairyFlow_Attendance_${date}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+    toast.success(`Downloaded ${fileName}`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="page-header">
@@ -77,13 +106,20 @@ const AttendancePage: React.FC = () => {
           <h1 className="page-title">Staff Attendance</h1>
           <p className="text-sm text-gray-500 mt-1">Mark daily attendance and track monthly worker reports.</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <input
             type="date"
-            className="input-field max-w-[160px] py-2 px-3"
+            className="input-field w-full sm:w-[160px] py-2 px-3"
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
+          <button
+            onClick={handleExportExcel}
+            disabled={workers.length === 0}
+            className="btn-secondary flex items-center justify-center gap-2"
+          >
+            <Download className="w-4 h-4" /> Export Excel
+          </button>
         </div>
       </div>
 

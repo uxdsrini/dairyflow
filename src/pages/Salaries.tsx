@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, Award, Calendar, Check, AlertCircle, RefreshCw } from 'lucide-react';
+import { DollarSign, Award, Calendar, Check, AlertCircle, RefreshCw, Download } from 'lucide-react';
 import { Worker, Salary, Attendance } from '../types';
 import { getWorkers } from '../services/workerService';
 import { getSalariesByMonth, addSalary, markSalaryPaid } from '../services/salaryService';
 import { getAllAttendance } from '../services/attendanceService';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
+import * as XLSX from 'xlsx';
 
 const Salaries: React.FC = () => {
   const { currentUser } = useAuth();
@@ -144,6 +145,57 @@ const Salaries: React.FC = () => {
 
   const totalExpense = salaries.reduce((acc, s) => acc + s.netSalary, 0);
 
+  const handleExportExcel = () => {
+    if (salaries.length === 0) {
+      toast.error('No salaries to export');
+      return;
+    }
+
+    const rows: any[] = salaries.map((salary, index) => ({
+      'S.No': index + 1,
+      'Worker Name': salary.workerName,
+      'Month': month,
+      'Year': year,
+      'Days Present': salary.daysPresent,
+      'Half Days': salary.halfDays,
+      'Days Absent': salary.daysAbsent,
+      'Base Salary': salary.baseSalary,
+      'Advance': salary.advance,
+      'Deduction': salary.deduction,
+      'Overtime': salary.overtime,
+      'Net Salary': salary.netSalary,
+      'Status': salary.status,
+    }));
+
+    rows.push({
+      'S.No': '' as any,
+      'Worker Name': 'TOTAL',
+      'Month': month,
+      'Year': year,
+      'Days Present': '' as any,
+      'Half Days': '' as any,
+      'Days Absent': '' as any,
+      'Base Salary': '' as any,
+      'Advance': '' as any,
+      'Deduction': '' as any,
+      'Overtime': '' as any,
+      'Net Salary': totalExpense,
+      'Status': '',
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    worksheet['!cols'] = [
+      { wch: 8 }, { wch: 24 }, { wch: 10 }, { wch: 10 }, { wch: 14 },
+      { wch: 12 }, { wch: 12 }, { wch: 14 }, { wch: 12 }, { wch: 12 },
+      { wch: 12 }, { wch: 14 }, { wch: 12 },
+    ];
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Salaries');
+    const fileName = `DairyFlow_Salaries_${year}_${String(month).padStart(2, '0')}.xlsx`;
+    XLSX.writeFile(workbook, fileName);
+    toast.success(`Downloaded ${fileName}`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="page-header">
@@ -175,6 +227,13 @@ const Salaries: React.FC = () => {
             className="btn-primary flex items-center gap-1.5 text-sm py-2 px-3"
           >
             <RefreshCw className="w-4 h-4" /> Calculate Salaries
+          </button>
+          <button
+            onClick={handleExportExcel}
+            disabled={salaries.length === 0}
+            className="btn-secondary flex items-center gap-1.5 text-sm py-2 px-3"
+          >
+            <Download className="w-4 h-4" /> Export Excel
           </button>
         </div>
       </div>
