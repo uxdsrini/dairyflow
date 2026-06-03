@@ -24,6 +24,7 @@ export interface Subscription {
   startDate: Timestamp;
   pricePerLitre: number;
   status: 'active' | 'paused' | 'stopped';
+  createdBy?: string;
   createdAt: Timestamp;
 }
 
@@ -46,6 +47,7 @@ export interface Order {
   orderDate: Timestamp;
   orderStatus: 'pending' | 'delivered' | 'cancelled';
   paymentStatus: 'paid' | 'unpaid' | 'partial';
+  createdBy?: string;
   createdAt: Timestamp;
 }
 
@@ -68,6 +70,7 @@ export interface Delivery {
   workerId: string;
   workerName: string;
   status: 'pending' | 'delivered' | 'missed' | 'cancelled';
+  createdBy?: string;
   createdAt: Timestamp;
 }
 
@@ -80,6 +83,7 @@ export interface Worker {
   monthlySalary: number;
   joiningDate: Timestamp;
   status: 'active' | 'inactive';
+  createdBy?: string;
   createdAt: Timestamp;
 }
 
@@ -89,6 +93,7 @@ export interface Attendance {
   workerName: string;
   date: string;
   status: 'present' | 'absent' | 'half_day' | 'leave';
+  createdBy?: string;
 }
 
 export interface Salary {
@@ -107,6 +112,7 @@ export interface Salary {
   netSalary: number;
   status: 'paid' | 'unpaid';
   paidDate?: Timestamp;
+  createdBy?: string;
   createdAt: Timestamp;
 }
 
@@ -147,6 +153,7 @@ export interface Invoice {
   paidAmount: number;
   pendingAmount: number;
   status: 'paid' | 'partial' | 'unpaid';
+  createdBy?: string;
   createdAt: Timestamp;
 }
 

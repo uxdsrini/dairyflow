@@ -8,11 +8,13 @@ import { getExpenses } from '../services/expenseService';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
+import { useAuth } from '../contexts/AuthContext';
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const Reports: React.FC = () => {
+  const { currentUser } = useAuth();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [salaries, setSalaries] = useState<Salary[]>([]);
@@ -32,10 +34,10 @@ const Reports: React.FC = () => {
     setLoading(true);
     try {
       const results = await Promise.allSettled([
-        getInvoices(),
-        getPayments(),
-        getSalaries(),
-        getExpenses()
+        getInvoices(currentUser?.uid),
+        getPayments(currentUser?.uid),
+        getSalaries(currentUser?.uid),
+        getExpenses(currentUser?.uid)
       ]);
 
       if (results[0].status === 'fulfilled') {

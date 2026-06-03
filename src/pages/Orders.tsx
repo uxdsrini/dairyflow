@@ -7,6 +7,7 @@ import Modal from '../components/ui/Modal';
 import toast from 'react-hot-toast';
 import { Timestamp } from 'firebase/firestore';
 import { formatFirestoreDate, getFirestoreISOString } from '../utils/dateUtils';
+import { useAuth } from '../contexts/AuthContext';
 
 
 const PRODUCTS = [
@@ -17,6 +18,7 @@ const PRODUCTS = [
 ];
 
 const Orders: React.FC = () => {
+  const { currentUser } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -58,7 +60,7 @@ const Orders: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [ordersData, customersData] = await Promise.all([getOrders(), getCustomers()]);
+      const [ordersData, customersData] = await Promise.all([getOrders(currentUser?.uid), getCustomers(currentUser?.uid)]);
       setOrders(ordersData);
       setCustomers(customersData.filter(c => c.status === 'active'));
     } catch (err) {
@@ -142,6 +144,7 @@ const Orders: React.FC = () => {
         orderDate: Timestamp.fromDate(new Date(orderDate)),
         orderStatus,
         paymentStatus,
+        createdBy: editingOrder?.createdBy || currentUser?.uid,
       };
 
       if (editingOrder) {

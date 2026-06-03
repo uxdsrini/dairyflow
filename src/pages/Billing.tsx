@@ -7,8 +7,10 @@ import { getDeliveries } from '../services/deliveryService';
 import { getOrders } from '../services/orderService';
 import { getSubscriptions } from '../services/subscriptionService';
 import toast from 'react-hot-toast';
+import { useAuth } from '../contexts/AuthContext';
 
 const Billing: React.FC = () => {
+  const { currentUser } = useAuth();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [filteredInvoices, setFilteredInvoices] = useState<Invoice[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -33,8 +35,8 @@ const Billing: React.FC = () => {
     setLoading(true);
     try {
       const [customersData, invoicesData] = await Promise.all([
-        getCustomers(),
-        getInvoicesByMonth(month, year)
+        getCustomers(currentUser?.uid),
+        getInvoicesByMonth(month, year, currentUser?.uid)
       ]);
       setCustomers(customersData);
       setInvoices(invoicesData);
@@ -60,9 +62,9 @@ const Billing: React.FC = () => {
     try {
       // 1. Fetch all deliveries, orders, and subscriptions to calculate bills
       const [allDeliveries, allOrders, allSubscriptions] = await Promise.all([
-        getDeliveries(),
-        getOrders(),
-        getSubscriptions()
+        getDeliveries(currentUser?.uid),
+        getOrders(currentUser?.uid),
+        getSubscriptions(currentUser?.uid)
       ]);
 
       // Build subscription lookup maps:
@@ -199,7 +201,8 @@ const Billing: React.FC = () => {
           totalAmount: total,
           paidAmount,
           pendingAmount,
-          status
+          status,
+          createdBy: existing?.createdBy || currentUser?.uid
         };
 
         await addInvoice(invoicePayload);

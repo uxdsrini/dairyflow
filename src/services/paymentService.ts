@@ -4,6 +4,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Customer, ImportLog, Payment } from '../types';
+import { filterByUser } from './userScope';
 
 const COLLECTION = 'payments';
 const CUSTOMERS_COLLECTION = 'customers';
@@ -23,9 +24,9 @@ export interface PaymentImportLogInput {
   uploadedBy: string;
 }
 
-export const getPayments = async (): Promise<Payment[]> => {
+export const getPayments = async (userId?: string): Promise<Payment[]> => {
   const snapshot = await getDocs(collection(db, COLLECTION));
-  const payments = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Payment));
+  const payments = filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Payment)), userId);
   // Sort client-side to avoid Firestore index requirement
   return payments.sort((a, b) => {
     try {
@@ -38,14 +39,14 @@ export const getPayments = async (): Promise<Payment[]> => {
   });
 };
 
-export const getPaymentsByCustomer = async (customerId: string): Promise<Payment[]> => {
+export const getPaymentsByCustomer = async (customerId: string, userId?: string): Promise<Payment[]> => {
   const q = query(
     collection(db, COLLECTION),
     where('customerId', '==', customerId),
     orderBy('date', 'desc')
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Payment));
+  return filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Payment)), userId);
 };
 
 export const addPayment = async (data: Omit<Payment, 'id' | 'createdAt'>) => {
@@ -128,11 +129,12 @@ export const bulkImportPayments = async (
   return { importedRows, newCustomersCreated: createdCustomers };
 };
 
-export const getRecentPaymentImportLogs = async (): Promise<ImportLog[]> => {
+export const getRecentPaymentImportLogs = async (userId?: string): Promise<ImportLog[]> => {
   const snapshot = await getDocs(collection(db, IMPORT_LOGS_COLLECTION));
   return snapshot.docs
     .map((d) => ({ id: d.id, ...d.data() } as ImportLog))
     .filter((log) => log.type === 'payments')
+    .filter((log) => !userId || log.uploadedBy === userId)
     .sort((a, b) => {
       const dateA = a.uploadedAt?.toDate ? a.uploadedAt.toDate().getTime() : 0;
       const dateB = b.uploadedAt?.toDate ? b.uploadedAt.toDate().getTime() : 0;

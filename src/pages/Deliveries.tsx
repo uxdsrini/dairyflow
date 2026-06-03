@@ -7,8 +7,10 @@ import { getActiveSubscriptions } from '../services/subscriptionService';
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
 import { Timestamp } from 'firebase/firestore';
+import { useAuth } from '../contexts/AuthContext';
 
 const Deliveries: React.FC = () => {
+  const { currentUser } = useAuth();
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [filteredDeliveries, setFilteredDeliveries] = useState<Delivery[]>([]);
   const [workers, setWorkers] = useState<Worker[]>([]);
@@ -32,8 +34,8 @@ const Deliveries: React.FC = () => {
     setLoading(true);
     try {
       const [deliveriesData, workersData] = await Promise.all([
-        getDeliveriesByDate(date),
-        getWorkers()
+        getDeliveriesByDate(date, currentUser?.uid),
+        getWorkers(currentUser?.uid)
       ]);
       setDeliveries(deliveriesData);
       setWorkers(workersData.filter(w => w.status === 'active' && w.role === 'delivery_boy'));
@@ -68,7 +70,7 @@ const Deliveries: React.FC = () => {
 
     setLoading(true);
     try {
-      const activeSubs = await getActiveSubscriptions();
+      const activeSubs = await getActiveSubscriptions(currentUser?.uid);
       if (activeSubs.length === 0) {
         toast.error('No active subscriptions found to generate deliveries.');
         setLoading(false);
@@ -93,12 +95,13 @@ const Deliveries: React.FC = () => {
           route: 'General Route', // Default route, update below if customer is found
           workerId: '',
           workerName: 'Unassigned',
-          status: 'pending'
+          status: 'pending',
+          createdBy: currentUser?.uid
         };
 
         // Try to find customer details to get correct route
         try {
-          const custSnap = await getDeliveriesByDate(date); // Not querying again, we can match with state or defaults
+          const custSnap = await getDeliveriesByDate(date, currentUser?.uid); // Not querying again, we can match with state or defaults
         } catch (e) {
           console.error(e);
         }

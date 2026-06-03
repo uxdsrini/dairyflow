@@ -4,30 +4,31 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Invoice } from '../types';
+import { filterByUser } from './userScope';
 
 const COLLECTION = 'invoices';
 
-export const getInvoices = async (): Promise<Invoice[]> => {
+export const getInvoices = async (userId?: string): Promise<Invoice[]> => {
   const snapshot = await getDocs(collection(db, COLLECTION));
-  const invoices = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Invoice));
+  const invoices = filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Invoice)), userId);
   // Sort client-side to avoid needing a Firestore composite index
   return invoices.sort((a, b) => b.year - a.year || b.month - a.month);
 };
 
-export const getInvoicesByCustomer = async (customerId: string): Promise<Invoice[]> => {
+export const getInvoicesByCustomer = async (customerId: string, userId?: string): Promise<Invoice[]> => {
   const q = query(collection(db, COLLECTION), where('customerId', '==', customerId));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Invoice));
+  return filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Invoice)), userId);
 };
 
-export const getInvoicesByMonth = async (month: number, year: number): Promise<Invoice[]> => {
+export const getInvoicesByMonth = async (month: number, year: number, userId?: string): Promise<Invoice[]> => {
   const q = query(
     collection(db, COLLECTION),
     where('month', '==', month),
     where('year', '==', year)
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Invoice));
+  return filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Invoice)), userId);
 };
 
 export const addInvoice = async (data: Omit<Invoice, 'id' | 'createdAt'>) => {

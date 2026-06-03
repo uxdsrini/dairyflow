@@ -4,19 +4,20 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Customer } from '../types';
+import { filterByUser } from './userScope';
 
 const COLLECTION = 'customers';
 
-export const getCustomers = async (): Promise<Customer[]> => {
+export const getCustomers = async (userId?: string): Promise<Customer[]> => {
   const q = query(collection(db, COLLECTION), orderBy('name'));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Customer));
+  return filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Customer)), userId);
 };
 
-export const getCustomersByStatus = async (status: string): Promise<Customer[]> => {
+export const getCustomersByStatus = async (status: string, userId?: string): Promise<Customer[]> => {
   const q = query(collection(db, COLLECTION), where('status', '==', status), orderBy('name'));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Customer));
+  return filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Customer)), userId);
 };
 
 export const getCustomer = async (id: string): Promise<Customer | null> => {

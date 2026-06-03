@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Plus, Search, CreditCard, FileSpreadsheet, Upload, X,
+  Plus, Search, CreditCard, Calendar, FileSpreadsheet, Upload, X,
   AlertTriangle, CheckCircle2, ArrowRight, RotateCcw, Trash2, Edit2
 } from 'lucide-react';
 import { Payment, Customer, Invoice, PAYMENT_METHODS, ImportLog } from '../types';
@@ -335,7 +335,7 @@ const Payments: React.FC = () => {
 
     // Fetch payments
     try {
-      const paymentsData = await getPayments();
+      const paymentsData = await getPayments(currentUser?.uid);
       setPayments(paymentsData);
     } catch (err) {
       console.error('Failed to load payments:', err);
@@ -344,7 +344,7 @@ const Payments: React.FC = () => {
 
     // Fetch customers
     try {
-      const customersData = await getCustomers();
+      const customersData = await getCustomers(currentUser?.uid);
       setCustomers(customersData.filter(c => c.status === 'active'));
     } catch (err) {
       console.error('Failed to load customers:', err);
@@ -352,7 +352,7 @@ const Payments: React.FC = () => {
 
     // Fetch invoices separately — compound orderBy may need a Firestore index
     try {
-      const invoicesData = await getInvoices();
+      const invoicesData = await getInvoices(currentUser?.uid);
       setInvoices(invoicesData.filter(i => i.status !== 'paid'));
     } catch (err) {
       console.error('Failed to load invoices:', err);
@@ -364,7 +364,7 @@ const Payments: React.FC = () => {
 
   const loadImportLogs = async () => {
     try {
-      const logs = await getRecentPaymentImportLogs();
+      const logs = await getRecentPaymentImportLogs(currentUser?.uid);
       setImportLogs(logs);
     } catch (err) {
       console.error('Failed to load payment import logs:', err);

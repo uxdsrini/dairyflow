@@ -4,25 +4,26 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Subscription } from '../types';
+import { filterByUser } from './userScope';
 
 const COLLECTION = 'subscriptions';
 
-export const getSubscriptions = async (): Promise<Subscription[]> => {
+export const getSubscriptions = async (userId?: string): Promise<Subscription[]> => {
   const q = query(collection(db, COLLECTION), orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Subscription));
+  return filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Subscription)), userId);
 };
 
-export const getActiveSubscriptions = async (): Promise<Subscription[]> => {
+export const getActiveSubscriptions = async (userId?: string): Promise<Subscription[]> => {
   const q = query(collection(db, COLLECTION), where('status', '==', 'active'));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Subscription));
+  return filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Subscription)), userId);
 };
 
-export const getSubscriptionsByCustomer = async (customerId: string): Promise<Subscription[]> => {
+export const getSubscriptionsByCustomer = async (customerId: string, userId?: string): Promise<Subscription[]> => {
   const q = query(collection(db, COLLECTION), where('customerId', '==', customerId));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Subscription));
+  return filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Subscription)), userId);
 };
 
 export const addSubscription = async (data: Omit<Subscription, 'id' | 'createdAt'>) => {

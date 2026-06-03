@@ -5,8 +5,10 @@ import { getWorkers } from '../services/workerService';
 import { getSalariesByMonth, addSalary, markSalaryPaid } from '../services/salaryService';
 import { getAllAttendance } from '../services/attendanceService';
 import toast from 'react-hot-toast';
+import { useAuth } from '../contexts/AuthContext';
 
 const Salaries: React.FC = () => {
+  const { currentUser } = useAuth();
   const [salaries, setSalaries] = useState<Salary[]>([]);
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [attendances, setAttendances] = useState<Attendance[]>([]);
@@ -31,9 +33,9 @@ const Salaries: React.FC = () => {
     setLoading(true);
     try {
       const [workersData, salariesData, attendanceData] = await Promise.all([
-        getWorkers(),
-        getSalariesByMonth(month, year),
-        getAllAttendance()
+        getWorkers(currentUser?.uid),
+        getSalariesByMonth(month, year, currentUser?.uid),
+        getAllAttendance(currentUser?.uid)
       ]);
       setWorkers(workersData.filter(w => w.status === 'active'));
       setSalaries(salariesData);
@@ -82,7 +84,8 @@ const Salaries: React.FC = () => {
           deduction: existing ? existing.deduction : 0,
           overtime: existing ? existing.overtime : 0,
           netSalary: calculatedBase + (existing ? existing.overtime : 0) - (existing ? (existing.advance + existing.deduction) : 0),
-          status: existing ? existing.status : 'unpaid'
+          status: existing ? existing.status : 'unpaid',
+          createdBy: existing?.createdBy || currentUser?.uid
         };
 
         await addSalary(payload);

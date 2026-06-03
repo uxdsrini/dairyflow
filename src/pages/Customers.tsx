@@ -4,8 +4,10 @@ import { Customer } from '../types';
 import { getCustomers, addCustomer, updateCustomer, deleteCustomer } from '../services/customerService';
 import Modal from '../components/ui/Modal';
 import toast from 'react-hot-toast';
+import { useAuth } from '../contexts/AuthContext';
 
 const Customers: React.FC = () => {
+  const { currentUser } = useAuth();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +43,7 @@ const Customers: React.FC = () => {
   const loadCustomers = async () => {
     setLoading(true);
     try {
-      const data = await getCustomers();
+      const data = await getCustomers(currentUser?.uid);
       setCustomers(data);
     } catch (err) {
       console.error('Error loading customers:', err);
@@ -111,7 +113,7 @@ const Customers: React.FC = () => {
 
     setSaving(true);
     try {
-      const payload = { name, mobile, address, route, customerType, status };
+      const payload = { name, mobile, address, route, customerType, status, createdBy: editingCustomer?.createdBy || currentUser?.uid };
       if (editingCustomer) {
         await updateCustomer(editingCustomer.id, payload);
         toast.success('Customer updated successfully');

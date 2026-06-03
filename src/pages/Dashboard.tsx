@@ -5,6 +5,7 @@ import {
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { getDashboardStats } from '../services/dashboardService';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
+import { useAuth } from '../contexts/AuthContext';
 
 interface Stats {
   totalCustomers: number;
@@ -20,6 +21,7 @@ interface Stats {
 }
 
 const Dashboard: React.FC = () => {
+  const { currentUser } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +31,7 @@ const Dashboard: React.FC = () => {
 
   const loadStats = async () => {
     try {
-      const data = await getDashboardStats();
+      const data = await getDashboardStats(currentUser?.uid);
       setStats(data);
     } catch (err) {
       console.error('Failed to load stats:', err);

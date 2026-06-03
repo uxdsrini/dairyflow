@@ -1,11 +1,13 @@
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { belongsToUser } from './userScope';
 
-export const getTotalExpenses = async (month: number, year: number): Promise<number> => {
+export const getTotalExpenses = async (month: number, year: number, userId?: string): Promise<number> => {
   try {
     const expenses = await getDocs(collection(db, 'expenses'));
     return expenses.docs.reduce((total, doc) => {
       const exp = doc.data();
+      if (!belongsToUser(exp, userId)) return total;
       const expDate = exp.expenseDate?.toDate ? exp.expenseDate.toDate() : new Date();
       if (expDate.getMonth() === month - 1 && expDate.getFullYear() === year) {
         return total + (exp.amount || 0);
@@ -18,7 +20,7 @@ export const getTotalExpenses = async (month: number, year: number): Promise<num
   }
 };
 
-export const getDashboardStats = async () => {
+export const getDashboardStats = async (userId?: string) => {
   const today = new Date().toISOString().split('T')[0];
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
@@ -42,21 +44,28 @@ export const getDashboardStats = async () => {
       )),
     ]);
 
-  const totalCustomers = customers.docs.filter((d) => d.data().status === 'active').length;
-  const activeSubscriptions = subscriptions.docs.filter((d) => d.data().status === 'active').length;
-  const todayDeliveries = deliveries.docs.length;
-  const deliveredToday = deliveries.docs.filter((d) => d.data().status === 'delivered').length;
+  const userCustomers = customers.docs.filter((d) => belongsToUser(d.data(), userId));
+  const userSubscriptions = subscriptions.docs.filter((d) => belongsToUser(d.data(), userId));
+  const userDeliveries = deliveries.docs.filter((d) => belongsToUser(d.data(), userId));
+  const userPayments = payments.docs.filter((d) => belongsToUser(d.data(), userId));
+  const userSalaries = salaries.docs.filter((d) => belongsToUser(d.data(), userId));
+  const userInvoices = invoices.docs.filter((d) => belongsToUser(d.data(), userId));
+
+  const totalCustomers = userCustomers.filter((d) => d.data().status === 'active').length;
+  const activeSubscriptions = userSubscriptions.filter((d) => d.data().status === 'active').length;
+  const todayDeliveries = userDeliveries.length;
+  const deliveredToday = userDeliveries.filter((d) => d.data().status === 'delivered').length;
 
   let monthlyRevenue = 0;
   let paidAmount = 0;
   let pendingAmount = 0;
 
-  invoices.docs.forEach((d) => {
+  userInvoices.forEach((d) => {
     const data = d.data();
     pendingAmount += data.pendingAmount || 0;
   });
 
-  payments.docs.forEach((d) => {
+  userPayments.forEach((d) => {
     const data = d.data();
     const paymentDate = data.date?.toDate
       ? data.date.toDate()
@@ -76,12 +85,12 @@ export const getDashboardStats = async () => {
   monthlyRevenue = paidAmount;
 
   let salaryExpense = 0;
-  salaries.docs.forEach((d) => {
+  userSalaries.forEach((d) => {
     salaryExpense += d.data().netSalary || 0;
   });
 
   // Get total expenses for the month
-  const totalExpenses = await getTotalExpenses(currentMonth, currentYear);
+  const totalExpenses = await getTotalExpenses(currentMonth, currentYear, userId);
 
   return {
     totalCustomers,

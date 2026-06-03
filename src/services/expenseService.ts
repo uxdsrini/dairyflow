@@ -4,6 +4,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Expense, ImportLog } from '../types';
+import { filterByUser } from './userScope';
 
 const COLLECTION = 'expenses';
 const IMPORT_LOGS_COLLECTION = 'import_logs';
@@ -20,9 +21,9 @@ export interface ExpenseImportLogInput {
   uploadedBy: string;
 }
 
-export const getExpenses = async (): Promise<Expense[]> => {
+export const getExpenses = async (userId?: string): Promise<Expense[]> => {
   const snapshot = await getDocs(collection(db, COLLECTION));
-  const expenses = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Expense));
+  const expenses = filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Expense)), userId);
   // Sort by date descending
   return expenses.sort((a, b) => {
     try {
@@ -35,18 +36,18 @@ export const getExpenses = async (): Promise<Expense[]> => {
   });
 };
 
-export const getExpensesByCategory = async (category: string): Promise<Expense[]> => {
+export const getExpensesByCategory = async (category: string, userId?: string): Promise<Expense[]> => {
   const q = query(
     collection(db, COLLECTION),
     where('category', '==', category),
     orderBy('expenseDate', 'desc')
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Expense));
+  return filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Expense)), userId);
 };
 
-export const getExpensesByDateRange = async (startDate: string, endDate: string): Promise<Expense[]> => {
-  const allExpenses = await getExpenses();
+export const getExpensesByDateRange = async (startDate: string, endDate: string, userId?: string): Promise<Expense[]> => {
+  const allExpenses = await getExpenses(userId);
   return allExpenses.filter((exp) => {
     try {
       const expDate = exp.expenseDate?.toDate ? exp.expenseDate.toDate().toISOString().split('T')[0] : '';
@@ -57,8 +58,8 @@ export const getExpensesByDateRange = async (startDate: string, endDate: string)
   });
 };
 
-export const getExpensesByMonth = async (month: number, year: number): Promise<Expense[]> => {
-  const allExpenses = await getExpenses();
+export const getExpensesByMonth = async (month: number, year: number, userId?: string): Promise<Expense[]> => {
+  const allExpenses = await getExpenses(userId);
   return allExpenses.filter((exp) => {
     try {
       const expDate = exp.expenseDate?.toDate ? exp.expenseDate.toDate() : new Date();
@@ -69,13 +70,13 @@ export const getExpensesByMonth = async (month: number, year: number): Promise<E
   });
 };
 
-export const getTotalExpensesByMonth = async (month: number, year: number): Promise<number> => {
-  const expenses = await getExpensesByMonth(month, year);
+export const getTotalExpensesByMonth = async (month: number, year: number, userId?: string): Promise<number> => {
+  const expenses = await getExpensesByMonth(month, year, userId);
   return expenses.reduce((sum, exp) => sum + exp.amount, 0);
 };
 
-export const getTotalExpensesByCategory = async (): Promise<Record<string, number>> => {
-  const expenses = await getExpenses();
+export const getTotalExpensesByCategory = async (userId?: string): Promise<Record<string, number>> => {
+  const expenses = await getExpenses(userId);
   const byCategory: Record<string, number> = {};
   
   expenses.forEach((exp) => {
@@ -88,8 +89,8 @@ export const getTotalExpensesByCategory = async (): Promise<Record<string, numbe
   return byCategory;
 };
 
-export const getTotalExpensesForPeriod = async (startDate: string, endDate: string): Promise<number> => {
-  const expenses = await getExpensesByDateRange(startDate, endDate);
+export const getTotalExpensesForPeriod = async (startDate: string, endDate: string, userId?: string): Promise<number> => {
+  const expenses = await getExpensesByDateRange(startDate, endDate, userId);
   return expenses.reduce((sum, exp) => sum + exp.amount, 0);
 };
 
@@ -151,11 +152,12 @@ export const bulkImportExpenses = async (
   return { importedRows };
 };
 
-export const getRecentExpenseImportLogs = async (): Promise<ImportLog[]> => {
+export const getRecentExpenseImportLogs = async (userId?: string): Promise<ImportLog[]> => {
   const snapshot = await getDocs(collection(db, IMPORT_LOGS_COLLECTION));
   return snapshot.docs
     .map((d) => ({ id: d.id, ...d.data() } as ImportLog))
     .filter((log) => log.type === 'expenses')
+    .filter((log) => !userId || log.uploadedBy === userId)
     .sort((a, b) => {
       const dateA = a.uploadedAt?.toDate ? a.uploadedAt.toDate().getTime() : 0;
       const dateB = b.uploadedAt?.toDate ? b.uploadedAt.toDate().getTime() : 0;

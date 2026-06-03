@@ -7,9 +7,11 @@ import Modal from '../components/ui/Modal';
 import toast from 'react-hot-toast';
 import { Timestamp } from 'firebase/firestore';
 import { formatFirestoreDate, getFirestoreISOString } from '../utils/dateUtils';
+import { useAuth } from '../contexts/AuthContext';
 
 
 const Subscriptions: React.FC = () => {
+  const { currentUser } = useAuth();
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [filteredSubscriptions, setFilteredSubscriptions] = useState<Subscription[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -44,7 +46,7 @@ const Subscriptions: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [subsData, custsData] = await Promise.all([getSubscriptions(), getCustomers()]);
+      const [subsData, custsData] = await Promise.all([getSubscriptions(currentUser?.uid), getCustomers(currentUser?.uid)]);
       setSubscriptions(subsData);
       setCustomers(custsData.filter(c => c.status === 'active')); // Only active customers can subscribe
     } catch (err) {
@@ -122,6 +124,7 @@ const Subscriptions: React.FC = () => {
         startDate: Timestamp.fromDate(new Date(startDate)),
         pricePerLitre: Number(pricePerLitre),
         status,
+        createdBy: editingSub?.createdBy || currentUser?.uid,
       };
 
       if (editingSub) {

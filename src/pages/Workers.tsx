@@ -6,9 +6,11 @@ import Modal from '../components/ui/Modal';
 import toast from 'react-hot-toast';
 import { Timestamp } from 'firebase/firestore';
 import { formatFirestoreDate, getFirestoreISOString } from '../utils/dateUtils';
+import { useAuth } from '../contexts/AuthContext';
 
 
 const Workers: React.FC = () => {
+  const { currentUser } = useAuth();
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [filteredWorkers, setFilteredWorkers] = useState<Worker[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +43,7 @@ const Workers: React.FC = () => {
   const loadWorkers = async () => {
     setLoading(true);
     try {
-      const data = await getWorkers();
+      const data = await getWorkers(currentUser?.uid);
       setWorkers(data);
     } catch (err) {
       console.error(err);
@@ -108,6 +110,7 @@ const Workers: React.FC = () => {
         monthlySalary: Number(monthlySalary),
         joiningDate: Timestamp.fromDate(new Date(joiningDate)),
         status,
+        createdBy: editingWorker?.createdBy || currentUser?.uid,
       };
 
       if (editingWorker) {

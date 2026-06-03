@@ -4,8 +4,10 @@ import { Worker, Attendance } from '../types';
 import { getWorkers } from '../services/workerService';
 import { getAttendanceByDate, markAttendance } from '../services/attendanceService';
 import toast from 'react-hot-toast';
+import { useAuth } from '../contexts/AuthContext';
 
 const AttendancePage: React.FC = () => {
+  const { currentUser } = useAuth();
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [attendances, setAttendances] = useState<Attendance[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,8 +21,8 @@ const AttendancePage: React.FC = () => {
     setLoading(true);
     try {
       const [workersData, attendanceData] = await Promise.all([
-        getWorkers(),
-        getAttendanceByDate(date)
+        getWorkers(currentUser?.uid),
+        getAttendanceByDate(date, currentUser?.uid)
       ]);
       setWorkers(workersData.filter(w => w.status === 'active'));
       setAttendances(attendanceData);
@@ -38,7 +40,8 @@ const AttendancePage: React.FC = () => {
         workerId: worker.id,
         workerName: worker.name,
         date,
-        status
+        status,
+        createdBy: currentUser?.uid
       });
       toast.success(`Marked ${worker.name} as ${status}`);
       // Refresh local state without reloading full data
@@ -47,7 +50,7 @@ const AttendancePage: React.FC = () => {
         if (existing) {
           return prev.map(a => a.workerId === worker.id ? { ...a, status } : a);
         } else {
-          return [...prev, { id: 'temp', workerId: worker.id, workerName: worker.name, date, status }];
+          return [...prev, { id: 'temp', workerId: worker.id, workerName: worker.name, date, status, createdBy: currentUser?.uid }];
         }
       });
     } catch (err) {

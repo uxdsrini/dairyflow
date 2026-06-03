@@ -328,7 +328,7 @@ const Expenses: React.FC = () => {
   const loadExpenses = async () => {
     setLoading(true);
     try {
-      const data = await getExpenses();
+      const data = await getExpenses(currentUser?.uid);
       setExpenses(data);
     } catch (err) {
       console.error('Failed to load expenses:', err);
@@ -340,7 +340,7 @@ const Expenses: React.FC = () => {
 
   const loadImportLogs = async () => {
     try {
-      const logs = await getRecentExpenseImportLogs();
+      const logs = await getRecentExpenseImportLogs(currentUser?.uid);
       setImportLogs(logs);
     } catch (err) {
       console.error('Failed to load import logs:', err);
@@ -383,10 +383,10 @@ const Expenses: React.FC = () => {
   const updateSummary = async () => {
     try {
       const [month, year] = monthYear.split('-');
-      const total = await getTotalExpensesByMonth(parseInt(month), parseInt(year));
+      const total = await getTotalExpensesByMonth(parseInt(month), parseInt(year), currentUser?.uid);
       setMonthlyTotal(total);
 
-      const breakdown = await getTotalExpensesByCategory();
+      const breakdown = await getTotalExpensesByCategory(currentUser?.uid);
       setCategoryBreakdown(breakdown);
     } catch (err) {
       console.error('Failed to update summary:', err);

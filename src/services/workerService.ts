@@ -4,13 +4,14 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Worker } from '../types';
+import { filterByUser } from './userScope';
 
 const COLLECTION = 'workers';
 
-export const getWorkers = async (): Promise<Worker[]> => {
+export const getWorkers = async (userId?: string): Promise<Worker[]> => {
   const q = query(collection(db, COLLECTION), orderBy('name'));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Worker));
+  return filterByUser(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Worker)), userId);
 };
 
 export const addWorker = async (data: Omit<Worker, 'id' | 'createdAt'>) => {
