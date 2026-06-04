@@ -1,5 +1,29 @@
 import { Timestamp } from 'firebase/firestore';
 
+export type PlanId = 'starter' | 'growth' | 'premium';
+export type SubscriptionStatus = 'trial' | 'active' | 'expired' | 'pending_payment';
+
+export interface UserSubscriptionProfile {
+  id: string;
+  userId: string;
+  email?: string;
+  status: SubscriptionStatus;
+  trialPlan: PlanId;
+  activePlan?: PlanId | null;
+  trialStartedAt: Timestamp;
+  trialEndsAt: Timestamp;
+  planActivatedAt?: Timestamp | null;
+  planExpiresAt?: Timestamp | null;
+  isFoundingMember: boolean;
+  pricingLockedUntil?: Timestamp | null;
+  pendingPlan?: PlanId | null;
+  pendingPaymentLinkId?: string | null;
+  pendingReferenceId?: string | null;
+  lastPaymentId?: string | null;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
 export interface Customer {
   id: string;
   name: string;

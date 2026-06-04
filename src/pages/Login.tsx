@@ -36,7 +36,7 @@ const Login: React.FC = () => {
     try {
       if (isRegister) {
         await register(email, password);
-        toast.success('Account created successfully!');
+        toast.success('Account created successfully! Your 30-day Premium trial is now active.');
       } else {
         await login(email, password);
         toast.success('Welcome back!');
@@ -76,6 +76,11 @@ const Login: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-900 mb-6">
             {isRegister ? 'Create Account' : 'Welcome Back'}
           </h2>
+          {isRegister && (
+            <div className="mb-4 rounded-xl border border-dairy-100 bg-dairy-50 px-4 py-3 text-sm text-dairy-800">
+              Register now and start with a 30-day Premium trial.
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

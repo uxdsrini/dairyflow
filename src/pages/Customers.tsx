@@ -5,6 +5,7 @@ import { getCustomers, addCustomer, updateCustomer, deleteCustomer } from '../se
 import Modal from '../components/ui/Modal';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import * as XLSX from 'xlsx';
 
 const CUSTOMER_TYPE_LABELS: Record<Customer['customerType'], string> = {
@@ -21,6 +22,7 @@ const STATUS_LABELS: Record<Customer['status'], string> = {
 
 const Customers: React.FC = () => {
   const { currentUser } = useAuth();
+  const { isCustomerLimitReached } = useSubscription();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -102,6 +104,9 @@ const Customers: React.FC = () => {
   };
 
   const handleOpenAddModal = () => {
+    if (isCustomerLimitReached(customers.length)) {
+      return;
+    }
     resetForm();
     setIsModalOpen(true);
   };

@@ -12,6 +12,7 @@ DairyFlow is a simple, modern, mobile-friendly responsive dashboard application 
 6. **Salary Calculations**: Automatically calculate monthly payouts based on attendance, overtime, advance deductions.
 7. **Billing & Payments**: Auto-calculate monthly invoices, log cash/UPI/bank payments, and export WhatsApp-friendly invoice text.
 8. **Revenue Dashboard**: Real-time business insights (total revenue, paid vs outstanding dues, salary expenses, profit estimate) and charts.
+9. **Subscription Billing**: 30-day Premium trial for registered users, plan upgrade modal, Razorpay payment-link checkout, plan-based access control, and customer-count limits by plan.
 
 ---
 
@@ -37,6 +38,18 @@ npm install
 # Install backend dependencies
 npm run install:server
 ```
+
+### Step 1.5: Configure Billing Environment Variables
+Copy the example env files before testing the plan and payment flow:
+```bash
+cp .env.example .env
+cp server/.env.example server/.env
+```
+
+Required billing variables:
+- `VITE_API_BASE_URL`: Base URL for the Express API, usually `http://localhost:5001`
+- `RAZORPAY_KEY_ID`: Razorpay API key ID
+- `RAZORPAY_KEY_SECRET`: Razorpay API key secret
 
 ### Step 2: Start the Servers
 You can run both the frontend and the backend server concurrently.

@@ -2,8 +2,10 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, Users, CalendarCheck, Package, Truck, UserCog,
-  ClipboardList, Wallet, FileText, CreditCard, BarChart3, X, Milk, DollarSign
+  ClipboardList, Wallet, FileText, CreditCard, BarChart3, X, Milk, DollarSign, Lock
 } from 'lucide-react';
+import { FeatureKey, ROUTE_FEATURES } from '../../config/plans';
+import { useSubscription } from '../../contexts/SubscriptionContext';
 
 interface SidebarProps {
   open: boolean;
@@ -11,21 +13,33 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/customers', icon: Users, label: 'Customers' },
-  { to: '/subscriptions', icon: CalendarCheck, label: 'Subscriptions' },
-  { to: '/orders', icon: Package, label: 'Orders' },
-  { to: '/deliveries', icon: Truck, label: 'Deliveries' },
-  { to: '/workers', icon: UserCog, label: 'Workers' },
-  { to: '/attendance', icon: ClipboardList, label: 'Attendance' },
-  { to: '/salaries', icon: Wallet, label: 'Salaries' },
-  { to: '/billing', icon: FileText, label: 'Billing' },
-  { to: '/payments', icon: CreditCard, label: 'Payments' },
-  { to: '/expenses', icon: DollarSign, label: 'Expenses' },
-  { to: '/reports', icon: BarChart3, label: 'Reports' },
+  { to: '/', icon: LayoutDashboard, label: 'Dashboard', featureKey: ROUTE_FEATURES['/'] },
+  { to: '/customers', icon: Users, label: 'Customers', featureKey: ROUTE_FEATURES['/customers'] },
+  { to: '/subscriptions', icon: CalendarCheck, label: 'Subscriptions', featureKey: ROUTE_FEATURES['/subscriptions'] },
+  { to: '/orders', icon: Package, label: 'Orders', featureKey: ROUTE_FEATURES['/orders'] },
+  { to: '/deliveries', icon: Truck, label: 'Deliveries', featureKey: ROUTE_FEATURES['/deliveries'] },
+  { to: '/workers', icon: UserCog, label: 'Workers', featureKey: ROUTE_FEATURES['/workers'] },
+  { to: '/attendance', icon: ClipboardList, label: 'Attendance', featureKey: ROUTE_FEATURES['/attendance'] },
+  { to: '/salaries', icon: Wallet, label: 'Salaries', featureKey: ROUTE_FEATURES['/salaries'] },
+  { to: '/billing', icon: FileText, label: 'Billing', featureKey: ROUTE_FEATURES['/billing'] },
+  { to: '/payments', icon: CreditCard, label: 'Payments', featureKey: ROUTE_FEATURES['/payments'] },
+  { to: '/expenses', icon: DollarSign, label: 'Expenses', featureKey: ROUTE_FEATURES['/expenses'] },
+  { to: '/reports', icon: BarChart3, label: 'Reports', featureKey: ROUTE_FEATURES['/reports'] },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
+  const { loading, canAccessFeature, openUpgradeModal } = useSubscription();
+
+  const handleNavClick = (event: React.MouseEvent, featureKey?: FeatureKey | null) => {
+    if (loading || !featureKey || canAccessFeature(featureKey)) {
+      onClose();
+      return;
+    }
+
+    event.preventDefault();
+    openUpgradeModal(featureKey);
+  };
+
   return (
     <>
       {open && (
@@ -64,13 +78,16 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
               key={item.to}
               to={item.to}
               end={item.to === '/'}
-              onClick={onClose}
+              onClick={(event) => handleNavClick(event, item.featureKey)}
               className={({ isActive }) =>
                 isActive ? 'sidebar-link-active' : 'sidebar-link'
               }
             >
               <item.icon className="w-[18px] h-[18px]" />
               <span>{item.label}</span>
+              {item.featureKey && !loading && !canAccessFeature(item.featureKey) && (
+                <Lock className="w-3.5 h-3.5 ml-auto opacity-70" />
+              )}
             </NavLink>
           ))}
         </nav>

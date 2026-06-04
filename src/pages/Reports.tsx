@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart3, Users, DollarSign, Wallet, FileSpreadsheet, ChevronRight, AlertTriangle, Download, Calendar } from 'lucide-react';
+import { BarChart3, DollarSign, Wallet, FileSpreadsheet, AlertTriangle, Download, Calendar, Crown, TrendingUp, Target } from 'lucide-react';
 import { Invoice, Payment, Salary, Expense, EXPENSE_CATEGORY_LABELS } from '../types';
 import { getInvoices } from '../services/billingService';
 import { getPayments } from '../services/paymentService';
@@ -9,12 +9,14 @@ import LoadingSpinner from '../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const Reports: React.FC = () => {
   const { currentUser } = useAuth();
+  const { canAccessFeature, openUpgradeModal } = useSubscription();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [salaries, setSalaries] = useState<Salary[]>([]);
@@ -256,6 +258,19 @@ const Reports: React.FC = () => {
   const totalAllExpenses = totalBusinessExpenses + salaryExpenses;
   
   const netEstimatedProfit = totalCollected - totalAllExpenses;
+  const hasAdvancedAnalytics = canAccessFeature('advancedAnalytics');
+  const collectionEfficiency = totalBilled > 0 ? Math.round((totalCollected / totalBilled) * 100) : 0;
+  const daysInCurrentMonth = new Date(exportYear, exportMonth, 0).getDate();
+  const projectedMonthlyRevenue = exportRange === 'all'
+    ? totalCollected
+    : Math.round((totalCollected / Math.max(new Date().getDate(), 1)) * daysInCurrentMonth);
+  const expenseBreakdown = expenses.reduce<Record<string, number>>((acc, expense) => {
+    acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
+    return acc;
+  }, {});
+  const topExpenseEntry = Object.entries(expenseBreakdown).sort((a, b) => b[1] - a[1])[0];
+  const topExpenseLabel = topExpenseEntry ? EXPENSE_CATEGORY_LABELS[topExpenseEntry[0]] : 'No expenses yet';
+  const topExpenseValue = topExpenseEntry?.[1] || 0;
 
   // Group outstanding dues by customer name
   const customerDues: Record<string, { pending: number, total: number }> = {};
@@ -366,6 +381,60 @@ const Reports: React.FC = () => {
             Download Monthly Summary
           </button>
         </div>
+      </div>
+
+      <div className={`card p-5 space-y-4 ${hasAdvancedAnalytics ? 'border border-dairy-100' : 'border border-amber-200 bg-amber-50/60'}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${hasAdvancedAnalytics ? 'bg-dairy-50' : 'bg-white'}`}>
+              <Crown className={`w-5 h-5 ${hasAdvancedAnalytics ? 'text-dairy-600' : 'text-amber-600'}`} />
+            </div>
+            <div>
+              <h3 className="text-base font-semibold text-gray-900">Advanced Analytics</h3>
+              <p className="text-xs text-gray-500">
+                Revenue forecasting, collection efficiency, and expense insights for owners who want deeper visibility.
+              </p>
+            </div>
+          </div>
+          {!hasAdvancedAnalytics && (
+            <button onClick={() => openUpgradeModal('advancedAnalytics')} className="btn-primary">
+              Upgrade to Premium
+            </button>
+          )}
+        </div>
+
+        {hasAdvancedAnalytics ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rounded-2xl bg-gray-50 p-4">
+              <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                <TrendingUp className="w-4 h-4 text-dairy-600" />
+                Revenue Forecast
+              </div>
+              <div className="text-2xl font-bold text-gray-900 mt-3">₹{projectedMonthlyRevenue.toLocaleString()}</div>
+              <p className="text-xs text-gray-500 mt-1">Projected month-end collections based on current pace.</p>
+            </div>
+            <div className="rounded-2xl bg-gray-50 p-4">
+              <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                <Target className="w-4 h-4 text-dairy-600" />
+                Collection Efficiency
+              </div>
+              <div className="text-2xl font-bold text-gray-900 mt-3">{collectionEfficiency}%</div>
+              <p className="text-xs text-gray-500 mt-1">Collected revenue versus total billed amount.</p>
+            </div>
+            <div className="rounded-2xl bg-gray-50 p-4">
+              <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                <Wallet className="w-4 h-4 text-dairy-600" />
+                Top Expense Area
+              </div>
+              <div className="text-lg font-bold text-gray-900 mt-3">{topExpenseLabel}</div>
+              <p className="text-xs text-gray-500 mt-1">₹{topExpenseValue.toLocaleString()} spent in the largest expense category.</p>
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-amber-300 bg-white/80 p-4 text-sm text-gray-600 leading-6">
+            Premium unlocks advanced reports, analytics, and forecasting. Growth users can keep using exports and profit reports, while Premium adds deeper business insights for route-wise planning and future AI features.
+          </div>
+        )}
       </div>
 
       {/* Financial Performance Overview */}
