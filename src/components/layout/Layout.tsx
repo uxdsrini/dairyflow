@@ -25,7 +25,6 @@ const Layout: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="badge-green">Premium Trial</span>
-                  {subscription?.isFoundingMember && <span className="badge-blue">Founding Member</span>}
                 </div>
                 <p className="text-sm text-gray-700 mt-1">
                   You have {trialDaysLeft} day{trialDaysLeft === 1 ? '' : 's'} left in your 30-day Premium trial.
@@ -43,7 +42,6 @@ const Layout: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="badge-yellow">Trial Ended</span>
-                  {subscription?.isFoundingMember && <span className="badge-blue">Founding Member</span>}
                 </div>
                 <p className="text-sm text-gray-700 mt-1">
                   Your 30-day Premium trial has ended. Choose Starter, Growth, or Premium to continue using DairyFlow.

@@ -1,0 +1,33 @@
+<svg width="1024" height="500" viewBox="0 0 1024 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="96" y1="40" x2="904" y2="470" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B5D2B"/>
+      <stop offset="1" stop-color="#22C55E"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(792 108) rotate(135) scale(360 360)">
+      <stop stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="500" rx="44" fill="url(#bg)"/>
+  <circle cx="846" cy="126" r="190" fill="url(#glow)"/>
+  <circle cx="920" cy="430" r="100" fill="#FFFFFF" fill-opacity="0.08"/>
+  <g transform="translate(84 92)">
+    <rect width="220" height="220" rx="60" fill="#F0FDF4"/>
+    <path d="M110 32C110 32 62 89.03 62 133.664C62 165.028 83.855 190 110 190C136.145 190 158 165.028 158 133.664C158 89.03 110 32 110 32Z" fill="#16A34A"/>
+    <path d="M90 118C100 109 115 104 133 106" stroke="#DCFCE7" stroke-width="12" stroke-linecap="round"/>
+    <path d="M85 143C99 132 116 129 139 131" stroke="#BBF7D0" stroke-width="10" stroke-linecap="round"/>
+    <path d="M92 168C104 161 116 159 129 159" stroke="#86EFAC" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="144" cy="84" r="8" fill="#ECFCCB"/>
+  </g>
+  <text x="332" y="186" fill="white" font-size="60" font-weight="700" font-family="Inter, Arial, sans-serif">DairyFlow</text>
+  <text x="332" y="238" fill="#DCFCE7" font-size="24" font-weight="500" font-family="Inter, Arial, sans-serif">
+    <tspan x="332" dy="0">Billing, delivery, subscriptions and profit tracking</tspan>
+    <tspan x="332" dy="32">for dairy businesses</tspan>
+  </text>
+  <text x="332" y="336" fill="white" font-size="30" font-weight="600" font-family="Inter, Arial, sans-serif">Track revenue → expenses → profit</text>
+  <text x="332" y="382" fill="#DCFCE7" font-size="22" font-weight="500" font-family="Inter, Arial, sans-serif">
+    <tspan x="332" dy="0">Manage customers, staff, attendance, salaries</tspan>
+    <tspan x="332" dy="30">and route-wise delivery</tspan>
+  </text>
+</svg>

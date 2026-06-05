@@ -1,0 +1,106 @@
+<svg width="1240" height="2208" viewBox="0 0 1240 2208" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Dashboard overview">
+  <rect width="1240" height="2208" fill="#F6FFF8"/>
+  <circle cx="1050" cy="240" r="240" fill="#DCFCE7" fill-opacity="0.55"/>
+  <circle cx="190" cy="1900" r="280" fill="#DCFCE7" fill-opacity="0.65"/>
+  <rect x="52" y="52" width="1136" height="2104" rx="68" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="4"/>
+  
+  <text x="112" y="134" fill="#111827" font-size="34" font-weight="700" font-family="Inter, Arial, sans-serif">9:41</text>
+  <rect x="996" y="104" width="42" height="20" rx="10" fill="#111827" opacity="0.92"/>
+  <rect x="1048" y="100" width="54" height="28" rx="8" fill="none" stroke="#111827" stroke-width="6"/>
+  <rect x="1106" y="107" width="8" height="14" rx="3" fill="#111827"/>
+  <path d="M936 124C955 107 979 107 998 124" stroke="#111827" stroke-width="6" stroke-linecap="round"/>
+  <path d="M956 124C966 115 979 115 989 124" stroke="#111827" stroke-width="6" stroke-linecap="round"/>
+  
+  <g>
+    <rect x="96" y="170" width="1048" height="118" rx="32" fill="#15803D"/>
+    <circle cx="166" cy="229" r="30" fill="#DCFCE7"/>
+    <path d="M166 198C166 198 145 223 145 242.5C145 256.5 154 268 166 268C178 268 187 256.5 187 242.5C187 223 166 198 166 198Z" fill="#15803D"/>
+    <text x="214" y="222" fill="#FFFFFF" font-size="42" font-weight="700" font-family="Inter, Arial, sans-serif">Dashboard</text>
+    <text x="214" y="258" fill="#DCFCE7" font-size="22" font-weight="500" font-family="Inter, Arial, sans-serif">Today's milk business in one view</text>
+  </g>
+      <g>
+    <rect x="96" y="328" width="500" height="176" rx="28" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <rect x="120" y="352" width="54" height="54" rx="18" fill="#DCFCE7"/>
+    <text x="196" y="378" fill="#6B7280" font-size="22" font-weight="600" font-family="Inter, Arial, sans-serif">Today revenue</text>
+    <text x="120" y="448" fill="#111827" font-size="44" font-weight="800" font-family="Inter, Arial, sans-serif">₹18,460</text>
+  </g>
+      <g>
+    <rect x="644" y="328" width="500" height="176" rx="28" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <rect x="668" y="352" width="54" height="54" rx="18" fill="#FEF3C7"/>
+    <text x="744" y="378" fill="#6B7280" font-size="22" font-weight="600" font-family="Inter, Arial, sans-serif">Pending dues</text>
+    <text x="668" y="448" fill="#111827" font-size="44" font-weight="800" font-family="Inter, Arial, sans-serif">₹6,280</text>
+  </g>
+      <g>
+    <rect x="96" y="528" width="500" height="176" rx="28" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <rect x="120" y="552" width="54" height="54" rx="18" fill="#DBEAFE"/>
+    <text x="196" y="578" fill="#6B7280" font-size="22" font-weight="600" font-family="Inter, Arial, sans-serif">Active subscriptions</text>
+    <text x="120" y="648" fill="#111827" font-size="44" font-weight="800" font-family="Inter, Arial, sans-serif">148</text>
+  </g>
+      <g>
+    <rect x="644" y="528" width="500" height="176" rx="28" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <rect x="668" y="552" width="54" height="54" rx="18" fill="#DCFCE7"/>
+    <text x="744" y="578" fill="#6B7280" font-size="22" font-weight="600" font-family="Inter, Arial, sans-serif">Staff on route</text>
+    <text x="668" y="648" fill="#111827" font-size="44" font-weight="800" font-family="Inter, Arial, sans-serif">12</text>
+  </g>
+      <g>
+    <rect x="96" y="736" width="1048" height="406" rx="28" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <text x="120" y="778" fill="#111827" font-size="28" font-weight="800" font-family="Inter, Arial, sans-serif">Revenue vs expenses</text>
+    <path d="M136 1052 C 246 982, 306 1082, 416 1012 S 596 816, 716 1032 S 876 1092, 1104 856" stroke="#16A34A" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <path d="M136 1082 C 256 1042, 356 1102, 436 1062 S 656 876, 796 1072 S 906 766, 1096 826" stroke="#1D4ED8" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.7"/>
+    <circle cx="716" cy="1032" r="10" fill="#16A34A"/>
+    <circle cx="796" cy="1072" r="10" fill="#1D4ED8"/>
+    <text x="120" y="1118" fill="#6B7280" font-size="18" font-weight="600" font-family="Inter, Arial, sans-serif">Revenue</text>
+    <text x="226" y="1118" fill="#6B7280" font-size="18" font-weight="600" font-family="Inter, Arial, sans-serif">Expenses</text>
+  </g>
+      <text x="96" y="1194" fill="#111827" font-size="30" font-weight="800" font-family="Inter, Arial, sans-serif">Today's delivery status</text><text x="796" y="1194" fill="#15803D" font-size="22" font-weight="700" text-anchor="end" font-family="Inter, Arial, sans-serif">View all</text>
+      <g>
+    <rect x="96" y="1224" width="1048" height="138" rx="24" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <circle cx="144" cy="1272" r="18" fill="#DCFCE7"/>
+    <text x="176" y="1266" fill="#111827" font-size="24" font-weight="800" font-family="Inter, Arial, sans-serif">Sector 15 morning route</text>
+    <rect x="120" y="1306" width="136" height="38" rx="19" fill="#DCFCE7"/><text x="188" y="1331" text-anchor="middle" fill="#166534" font-size="18" font-weight="700" font-family="Inter, Arial, sans-serif">12 delivered • 2 pending</text>
+    <text x="1120" y="1266" text-anchor="end" fill="#111827" font-size="22" font-weight="800" font-family="Inter, Arial, sans-serif">Amit Singh</text>
+    <text x="1120" y="1298" text-anchor="end" fill="#6B7280" font-size="18" font-weight="600" font-family="Inter, Arial, sans-serif">06:40 AM</text>
+  </g>
+      <g>
+    <rect x="96" y="1380" width="1048" height="138" rx="24" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <circle cx="144" cy="1428" r="18" fill="#DCFCE7"/>
+    <text x="176" y="1422" fill="#111827" font-size="24" font-weight="800" font-family="Inter, Arial, sans-serif">Sector 21 wholesale route</text>
+    <rect x="120" y="1462" width="136" height="38" rx="19" fill="#FEF3C7"/><text x="188" y="1487" text-anchor="middle" fill="#B45309" font-size="18" font-weight="700" font-family="Inter, Arial, sans-serif">8 delivered • 1 missed</text>
+    <text x="1120" y="1422" text-anchor="end" fill="#111827" font-size="22" font-weight="800" font-family="Inter, Arial, sans-serif">Ravi Kumar</text>
+    <text x="1120" y="1454" text-anchor="end" fill="#6B7280" font-size="18" font-weight="600" font-family="Inter, Arial, sans-serif">07:20 AM</text>
+  </g>
+      <text x="96" y="1584" fill="#111827" font-size="30" font-weight="800" font-family="Inter, Arial, sans-serif">Monthly summary</text>
+      <g>
+    <rect x="96" y="1618" width="1048" height="290" rx="28" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <text x="120" y="1660" fill="#111827" font-size="28" font-weight="800" font-family="Inter, Arial, sans-serif">Profit trend</text>
+    <g>
+        <rect x="128" y="1751.5384615384614" width="40" height="98.46153846153847" rx="12" fill="#BBF7D0"/>
+        <text x="148" y="1882" text-anchor="middle" fill="#6B7280" font-size="16" font-weight="700" font-family="Inter, Arial, sans-serif">W1</text>
+      </g><g>
+        <rect x="196" y="1714.6153846153845" width="40" height="135.3846153846154" rx="12" fill="#86EFAC"/>
+        <text x="216" y="1882" text-anchor="middle" fill="#6B7280" font-size="16" font-weight="700" font-family="Inter, Arial, sans-serif">W2</text>
+      </g><g>
+        <rect x="264" y="1739.2307692307693" width="40" height="110.76923076923077" rx="12" fill="#22C55E"/>
+        <text x="284" y="1882" text-anchor="middle" fill="#6B7280" font-size="16" font-weight="700" font-family="Inter, Arial, sans-serif">W3</text>
+      </g><g>
+        <rect x="332" y="1690" width="40" height="160" rx="12" fill="#15803D"/>
+        <text x="352" y="1882" text-anchor="middle" fill="#6B7280" font-size="16" font-weight="700" font-family="Inter, Arial, sans-serif">W4</text>
+      </g><g>
+        <rect x="400" y="1702.3076923076924" width="40" height="147.6923076923077" rx="12" fill="#16A34A"/>
+        <text x="420" y="1882" text-anchor="middle" fill="#6B7280" font-size="16" font-weight="700" font-family="Inter, Arial, sans-serif">W5</text>
+      </g>
+  </g>
+      
+  <rect x="96" y="1960" width="1048" height="132" rx="34" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+  
+      <circle cx="208" cy="2012" r="20" fill="#15803D"/>
+      <text x="208" y="2066" text-anchor="middle" fill="#15803D" font-size="20" font-weight="700" font-family="Inter, Arial, sans-serif">Home</text>
+      <circle cx="416" cy="2012" r="20" fill="#E5E7EB"/>
+      <text x="416" y="2066" text-anchor="middle" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">Customers</text>
+      <circle cx="624" cy="2012" r="20" fill="#E5E7EB"/>
+      <text x="624" y="2066" text-anchor="middle" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">Billing</text>
+      <circle cx="832" cy="2012" r="20" fill="#E5E7EB"/>
+      <text x="832" y="2066" text-anchor="middle" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">Reports</text>
+      <circle cx="1040" cy="2012" r="20" fill="#E5E7EB"/>
+      <text x="1040" y="2066" text-anchor="middle" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">More</text>
+</svg>

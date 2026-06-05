@@ -1,0 +1,32 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="152" y1="112" x2="888" y2="912" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F6A34"/>
+      <stop offset="1" stop-color="#22C55E"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="512" y1="196" x2="512" y2="824" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="176" y="150" width="672" height="724" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="28"/>
+      <feGaussianBlur stdDeviation="30"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0431 0 0 0 0 0.251 0 0 0 0 0.1216 0 0 0 0.22 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1" result="shape"/>
+    </filter>
+  </defs>
+  <rect x="64" y="64" width="896" height="896" rx="224" fill="url(#bg)"/>
+  <circle cx="786" cy="238" r="92" fill="#FFFFFF" fill-opacity="0.08"/>
+  <circle cx="256" cy="812" r="126" fill="#FFFFFF" fill-opacity="0.06"/>
+  <rect x="112" y="112" width="800" height="800" rx="192" stroke="url(#glow)" stroke-width="8"/>
+  <g filter="url(#shadow)">
+    <path d="M512 236C512 236 350 428.233 350 578.64C350 678.762 422.529 760 512 760C601.471 760 674 678.762 674 578.64C674 428.233 512 236 512 236Z" fill="white"/>
+    <path d="M444 520C476.5 491.5 523 476.5 585 482.5" stroke="#16A34A" stroke-width="40" stroke-linecap="round"/>
+    <path d="M428 610C472 573 532 561 610 570" stroke="#15803D" stroke-width="34" stroke-linecap="round" opacity="0.92"/>
+    <path d="M454 704C493 681 533 671 578 672" stroke="#65A30D" stroke-width="28" stroke-linecap="round" opacity="0.95"/>
+    <circle cx="622" cy="412" r="28" fill="#DCFCE7"/>
+  </g>
+</svg>

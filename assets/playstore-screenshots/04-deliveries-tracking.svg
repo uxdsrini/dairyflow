@@ -1,0 +1,102 @@
+<svg width="1240" height="2208" viewBox="0 0 1240 2208" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Deliveries tracking">
+  <rect width="1240" height="2208" fill="#F6FFF8"/>
+  <circle cx="1050" cy="240" r="240" fill="#DCFCE7" fill-opacity="0.55"/>
+  <circle cx="190" cy="1900" r="280" fill="#DCFCE7" fill-opacity="0.65"/>
+  <rect x="52" y="52" width="1136" height="2104" rx="68" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="4"/>
+  
+  <text x="112" y="134" fill="#111827" font-size="34" font-weight="700" font-family="Inter, Arial, sans-serif">9:41</text>
+  <rect x="996" y="104" width="42" height="20" rx="10" fill="#111827" opacity="0.92"/>
+  <rect x="1048" y="100" width="54" height="28" rx="8" fill="none" stroke="#111827" stroke-width="6"/>
+  <rect x="1106" y="107" width="8" height="14" rx="3" fill="#111827"/>
+  <path d="M936 124C955 107 979 107 998 124" stroke="#111827" stroke-width="6" stroke-linecap="round"/>
+  <path d="M956 124C966 115 979 115 989 124" stroke="#111827" stroke-width="6" stroke-linecap="round"/>
+  
+  <g>
+    <rect x="96" y="170" width="1048" height="118" rx="32" fill="#15803D"/>
+    <circle cx="166" cy="229" r="30" fill="#DCFCE7"/>
+    <path d="M166 198C166 198 145 223 145 242.5C145 256.5 154 268 166 268C178 268 187 256.5 187 242.5C187 223 166 198 166 198Z" fill="#15803D"/>
+    <text x="214" y="222" fill="#FFFFFF" font-size="42" font-weight="700" font-family="Inter, Arial, sans-serif">Deliveries</text>
+    <text x="214" y="258" fill="#DCFCE7" font-size="22" font-weight="500" font-family="Inter, Arial, sans-serif">Track daily routes and drop status</text>
+  </g>
+      <g><rect x="96" y="328" width="120" height="46" rx="23" fill="#DCFCE7"/><text x="156" y="358" text-anchor="middle" fill="#166534" font-size="20" font-weight="700" font-family="Inter, Arial, sans-serif">Today</text></g>
+      <g><rect x="238" y="328" width="152" height="46" rx="23" fill="#DBEAFE"/><text x="314" y="358" text-anchor="middle" fill="#1D4ED8" font-size="20" font-weight="700" font-family="Inter, Arial, sans-serif">Sector 15</text></g>
+      <g><rect x="412" y="328" width="152" height="46" rx="23" fill="#ECFCCB"/><text x="488" y="358" text-anchor="middle" fill="#166534" font-size="20" font-weight="700" font-family="Inter, Arial, sans-serif">Sector 21</text></g>
+      <g>
+    <rect x="96" y="392" width="328" height="156" rx="28" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <rect x="120" y="416" width="54" height="54" rx="18" fill="#DCFCE7"/>
+    <text x="196" y="442" fill="#6B7280" font-size="22" font-weight="600" font-family="Inter, Arial, sans-serif">Total drops</text>
+    <text x="120" y="512" fill="#111827" font-size="44" font-weight="800" font-family="Inter, Arial, sans-serif">46</text>
+  </g>
+      <g>
+    <rect x="456" y="392" width="328" height="156" rx="28" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <rect x="480" y="416" width="54" height="54" rx="18" fill="#DBEAFE"/>
+    <text x="556" y="442" fill="#6B7280" font-size="22" font-weight="600" font-family="Inter, Arial, sans-serif">Delivered</text>
+    <text x="480" y="512" fill="#111827" font-size="44" font-weight="800" font-family="Inter, Arial, sans-serif">39</text>
+  </g>
+      <g>
+    <rect x="816" y="392" width="328" height="156" rx="28" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <rect x="840" y="416" width="54" height="54" rx="18" fill="#FEF3C7"/>
+    <text x="916" y="442" fill="#6B7280" font-size="22" font-weight="600" font-family="Inter, Arial, sans-serif">Exceptions</text>
+    <text x="840" y="512" fill="#111827" font-size="44" font-weight="800" font-family="Inter, Arial, sans-serif">7</text>
+  </g>
+      <text x="96" y="606" fill="#111827" font-size="30" font-weight="800" font-family="Inter, Arial, sans-serif">Assigned routes</text>
+      <g>
+    <rect x="96" y="640" width="1048" height="150" rx="24" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <circle cx="144" cy="688" r="18" fill="#DCFCE7"/>
+    <text x="176" y="682" fill="#111827" font-size="24" font-weight="800" font-family="Inter, Arial, sans-serif">Sector 15 morning route</text>
+    <rect x="120" y="722" width="136" height="38" rx="19" fill="#DCFCE7"/><text x="188" y="747" text-anchor="middle" fill="#166534" font-size="18" font-weight="700" font-family="Inter, Arial, sans-serif">Amit Singh • 14 stops</text>
+    <text x="1120" y="682" text-anchor="end" fill="#111827" font-size="22" font-weight="800" font-family="Inter, Arial, sans-serif">12 done</text>
+    <text x="1120" y="714" text-anchor="end" fill="#6B7280" font-size="18" font-weight="600" font-family="Inter, Arial, sans-serif">2 pending</text>
+  </g>
+      <g>
+    <rect x="96" y="806" width="1048" height="150" rx="24" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <circle cx="144" cy="854" r="18" fill="#DCFCE7"/>
+    <text x="176" y="848" fill="#111827" font-size="24" font-weight="800" font-family="Inter, Arial, sans-serif">Sector 16 subscriptions</text>
+    <rect x="120" y="888" width="136" height="38" rx="19" fill="#FEF3C7"/><text x="188" y="913" text-anchor="middle" fill="#B45309" font-size="18" font-weight="700" font-family="Inter, Arial, sans-serif">Ravi Kumar • 11 stops</text>
+    <text x="1120" y="848" text-anchor="end" fill="#111827" font-size="22" font-weight="800" font-family="Inter, Arial, sans-serif">9 done</text>
+    <text x="1120" y="880" text-anchor="end" fill="#6B7280" font-size="18" font-weight="600" font-family="Inter, Arial, sans-serif">1 missed • 1 delayed</text>
+  </g>
+      <g>
+    <rect x="96" y="972" width="1048" height="150" rx="24" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <circle cx="144" cy="1020" r="18" fill="#DCFCE7"/>
+    <text x="176" y="1014" fill="#111827" font-size="24" font-weight="800" font-family="Inter, Arial, sans-serif">Sector 21 wholesale route</text>
+    <rect x="120" y="1054" width="136" height="38" rx="19" fill="#DBEAFE"/><text x="188" y="1079" text-anchor="middle" fill="#1D4ED8" font-size="18" font-weight="700" font-family="Inter, Arial, sans-serif">Amit Singh • 9 stops</text>
+    <text x="1120" y="1014" text-anchor="end" fill="#111827" font-size="22" font-weight="800" font-family="Inter, Arial, sans-serif">8 done</text>
+    <text x="1120" y="1046" text-anchor="end" fill="#6B7280" font-size="18" font-weight="600" font-family="Inter, Arial, sans-serif">1 pending</text>
+  </g>
+      <g>
+    <rect x="96" y="1138" width="1048" height="150" rx="24" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+    <circle cx="144" cy="1186" r="18" fill="#DCFCE7"/>
+    <text x="176" y="1180" fill="#111827" font-size="24" font-weight="800" font-family="Inter, Arial, sans-serif">Sector 22 households</text>
+    <rect x="120" y="1220" width="136" height="38" rx="19" fill="#FEE2E2"/><text x="188" y="1245" text-anchor="middle" fill="#B91C1C" font-size="18" font-weight="700" font-family="Inter, Arial, sans-serif">Vijay Sharma • 12 stops</text>
+    <text x="1120" y="1180" text-anchor="end" fill="#111827" font-size="22" font-weight="800" font-family="Inter, Arial, sans-serif">10 done</text>
+    <text x="1120" y="1212" text-anchor="end" fill="#6B7280" font-size="18" font-weight="600" font-family="Inter, Arial, sans-serif">2 rescheduled</text>
+  </g>
+      <g>
+        <rect x="96" y="1338" width="1048" height="570" rx="28" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+        <text x="120" y="1380" fill="#111827" font-size="28" font-weight="800" font-family="Inter, Arial, sans-serif">Route timeline</text>
+        <path d="M158 1450V1828" stroke="#BBF7D0" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="158" cy="1482" r="14" fill="#16A34A"/>
+        <circle cx="158" cy="1606" r="14" fill="#16A34A"/>
+        <circle cx="158" cy="1730" r="14" fill="#B45309"/>
+        <text x="204" y="1490" fill="#111827" font-size="24" font-weight="800" font-family="Inter, Arial, sans-serif">6:10 AM • Royal Cafe</text>
+        <text x="204" y="1524" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">10 litres buffalo milk delivered</text>
+        <text x="204" y="1614" fill="#111827" font-size="24" font-weight="800" font-family="Inter, Arial, sans-serif">6:42 AM • Anil Gupta</text>
+        <text x="204" y="1648" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">2 litres cow milk delivered</text>
+        <text x="204" y="1738" fill="#111827" font-size="24" font-weight="800" font-family="Inter, Arial, sans-serif">7:05 AM • Sweet Home Bakery</text>
+        <text x="204" y="1772" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">Customer requested reschedule to evening</text>
+      </g>
+      
+  <rect x="96" y="1960" width="1048" height="132" rx="34" fill="#FFFFFF" stroke="#D1FAE5" stroke-width="3"/>
+  
+      <circle cx="208" cy="2012" r="20" fill="#15803D"/>
+      <text x="208" y="2066" text-anchor="middle" fill="#15803D" font-size="20" font-weight="700" font-family="Inter, Arial, sans-serif">Home</text>
+      <circle cx="416" cy="2012" r="20" fill="#E5E7EB"/>
+      <text x="416" y="2066" text-anchor="middle" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">Customers</text>
+      <circle cx="624" cy="2012" r="20" fill="#E5E7EB"/>
+      <text x="624" y="2066" text-anchor="middle" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">Billing</text>
+      <circle cx="832" cy="2012" r="20" fill="#E5E7EB"/>
+      <text x="832" y="2066" text-anchor="middle" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">Reports</text>
+      <circle cx="1040" cy="2012" r="20" fill="#E5E7EB"/>
+      <text x="1040" y="2066" text-anchor="middle" fill="#6B7280" font-size="20" font-weight="600" font-family="Inter, Arial, sans-serif">More</text>
+</svg>

@@ -61,9 +61,6 @@ const UpgradeModal: React.FC = () => {
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-lg font-semibold text-gray-900 sm:text-xl">{upgradeModalState.title}</span>
-                  {subscription?.isFoundingMember && (
-                    <span className="badge-blue">Founding Member</span>
-                  )}
                   {subscription?.status === 'trial' && trialDaysLeft > 0 && (
                     <span className="badge-green">{trialDaysLeft} days of Premium trial left</span>
                   )}

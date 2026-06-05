@@ -14,7 +14,11 @@ import { FOUNDING_MEMBER_LIMIT, PLAN_VALIDITY_DAYS, TRIAL_LENGTH_DAYS } from '..
 import { PlanId, UserSubscriptionProfile } from '../types';
 
 const COLLECTION = 'userSubscriptions';
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001').replace(/\/$/, '');
+const CONFIGURED_API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const API_BASE_URL = import.meta.env.DEV ? '' : CONFIGURED_API_BASE_URL;
+const BILLING_UNAVAILABLE_MESSAGE = import.meta.env.DEV
+  ? 'Billing service is unavailable. Run `npm run dev` to start both frontend and backend.'
+  : 'Billing service is unavailable. Please try again in a moment.';
 
 export interface BillingCallbackPayload {
   razorpay_payment_id: string;
@@ -172,14 +176,72 @@ const getAuthHeaders = async (user: User) => {
   };
 };
 
-export const createPaymentLink = async (user: User, planId: PlanId, appBaseUrl: string) => {
-  const response = await fetch(`${API_BASE_URL}/api/billing/create-payment-link`, {
-    method: 'POST',
-    headers: await getAuthHeaders(user),
-    body: JSON.stringify({ planId, appBaseUrl }),
-  });
+const parseJsonResponse = async <T>(response: Response) => {
+  const raw = await response.text();
 
-  const payload = await response.json();
+  if (!raw) {
+    return {} as T;
+  }
+
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    throw new Error(
+      response.ok
+        ? 'Billing service returned an unreadable response.'
+        : `Billing service returned an unreadable error (${response.status}).`
+    );
+  }
+};
+
+const activateVerifiedPlan = async (
+  user: User,
+  planId: PlanId,
+  expiresAtIso: string,
+  paymentId?: string
+) => {
+  const ref = doc(db, COLLECTION, user.uid);
+  const snapshot = await getDoc(ref);
+  const existing = snapshot.exists()
+    ? ({ id: snapshot.id, ...snapshot.data() } as UserSubscriptionProfile)
+    : await ensureUserSubscriptionProfile(user);
+
+  const now = Timestamp.now();
+  const expiresAt = new Date(expiresAtIso);
+  const safeExpiresAt = Number.isNaN(expiresAt.getTime()) ? addDays(new Date(), PLAN_VALIDITY_DAYS) : expiresAt;
+
+  await setDoc(
+    ref,
+    {
+      ...existing,
+      email: user.email || existing.email || '',
+      status: 'active',
+      activePlan: planId,
+      planActivatedAt: now,
+      planExpiresAt: Timestamp.fromDate(safeExpiresAt),
+      pendingPlan: null,
+      pendingPaymentLinkId: null,
+      pendingReferenceId: null,
+      lastPaymentId: paymentId || existing.lastPaymentId || null,
+      updatedAt: now,
+    },
+    { merge: true }
+  );
+};
+
+export const createPaymentLink = async (user: User, planId: PlanId, appBaseUrl: string) => {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/api/billing/create-payment-link`, {
+      method: 'POST',
+      headers: await getAuthHeaders(user),
+      body: JSON.stringify({ planId, appBaseUrl }),
+    });
+  } catch {
+    throw new Error(BILLING_UNAVAILABLE_MESSAGE);
+  }
+
+  const payload = await parseJsonResponse<{ error?: string; shortUrl: string; planId: PlanId }>(response);
 
   if (!response.ok) {
     throw new Error(payload.error || 'Failed to create payment link.');
@@ -189,19 +251,28 @@ export const createPaymentLink = async (user: User, planId: PlanId, appBaseUrl: 
 };
 
 export const verifyPaymentLink = async (user: User, callbackPayload: BillingCallbackPayload) => {
-  const response = await fetch(`${API_BASE_URL}/api/billing/verify-payment-link`, {
-    method: 'POST',
-    headers: await getAuthHeaders(user),
-    body: JSON.stringify(callbackPayload),
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}/api/billing/verify-payment-link`, {
+      method: 'POST',
+      headers: await getAuthHeaders(user),
+      body: JSON.stringify(callbackPayload),
+    });
+  } catch {
+    throw new Error(BILLING_UNAVAILABLE_MESSAGE);
+  }
 
-  const payload = await response.json();
+  const payload = await parseJsonResponse<{ error?: string; success: true; planId: PlanId; expiresAt: string; paymentId?: string }>(
+    response
+  );
 
   if (!response.ok) {
     throw new Error(payload.error || 'Failed to verify payment.');
   }
 
-  return payload as { success: true; planId: PlanId; expiresAt: string };
+  await activateVerifiedPlan(user, payload.planId, payload.expiresAt, payload.paymentId || callbackPayload.razorpay_payment_id);
+
+  return payload as { success: true; planId: PlanId; expiresAt: string; paymentId?: string };
 };
 
 export const isBillingCallbackPayload = (searchParams: URLSearchParams) => {

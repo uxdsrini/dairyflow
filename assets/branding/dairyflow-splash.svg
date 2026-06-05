@@ -1,0 +1,31 @@
+<svg width="1440" height="3120" viewBox="0 0 1440 3120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="240" y1="140" x2="1280" y2="3000" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B5D2B"/>
+      <stop offset="0.55" stop-color="#16934A"/>
+      <stop offset="1" stop-color="#22C55E"/>
+    </linearGradient>
+    <radialGradient id="spot" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1050 560) rotate(120) scale(860 860)">
+      <stop stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="720" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F0FDF4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="3120" fill="url(#bg)"/>
+  <circle cx="1120" cy="520" r="560" fill="url(#spot)"/>
+  <circle cx="280" cy="2680" r="380" fill="#FFFFFF" fill-opacity="0.06"/>
+  <g transform="translate(360 920)">
+    <rect width="720" height="720" rx="188" fill="url(#card)"/>
+    <rect x="10" y="10" width="700" height="700" rx="178" stroke="#BBF7D0" stroke-width="8"/>
+    <path d="M360 122C360 122 205 305.993 205 450.331C205 547.991 274.396 627 360 627C445.604 627 515 547.991 515 450.331C515 305.993 360 122 360 122Z" fill="#16A34A"/>
+    <path d="M295 398C326 371 372 357 430 363" stroke="#DCFCE7" stroke-width="36" stroke-linecap="round"/>
+    <path d="M280 478C322 443 378 432 452 440" stroke="#BBF7D0" stroke-width="30" stroke-linecap="round"/>
+    <path d="M304 558C343 536 381 527 424 528" stroke="#86EFAC" stroke-width="26" stroke-linecap="round"/>
+    <circle cx="467" cy="291" r="26" fill="#ECFCCB"/>
+  </g>
+  <text x="720" y="1830" text-anchor="middle" fill="white" font-size="146" font-weight="700" font-family="Inter, Arial, sans-serif">DairyFlow</text>
+  <text x="720" y="1950" text-anchor="middle" fill="#DCFCE7" font-size="58" font-weight="500" font-family="Inter, Arial, sans-serif">Smart dairy billing, delivery and profit tracking</text>
+</svg>

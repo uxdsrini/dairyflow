@@ -103,8 +103,8 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 card p-5">
           <h3 className="text-base font-semibold text-gray-900 mb-4">Monthly Revenue</h3>
-          <div className="h-[280px]">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="min-w-0">
+            <ResponsiveContainer width="100%" height={280} minWidth={0}>
               <BarChart data={revenueData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                 <XAxis dataKey="month" fontSize={12} tickLine={false} axisLine={false} />
@@ -127,8 +127,8 @@ const Dashboard: React.FC = () => {
 
         <div className="card p-5">
           <h3 className="text-base font-semibold text-gray-900 mb-4">Payment Status</h3>
-          <div className="h-[280px] flex flex-col items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="min-w-0 flex flex-col items-center justify-center">
+            <ResponsiveContainer width="100%" height={280} minWidth={0}>
               <PieChart>
                 <Pie
                   data={paymentPieData}

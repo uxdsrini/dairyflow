@@ -28,6 +28,11 @@ interface RazorpayPaymentLinkResponse {
   notes?: Record<string, string>;
 }
 
+interface SubscriptionSnapshot {
+  activePlan?: PlanId;
+  planExpiresAt?: admin.firestore.Timestamp;
+}
+
 const PLAN_PRICES: Record<PlanId, { name: string; amountInPaise: number }> = {
   starter: { name: 'Starter', amountInPaise: 29900 },
   growth: { name: 'Growth', amountInPaise: 59900 },
@@ -98,6 +103,64 @@ const buildReferenceId = (userId: string, planId: PlanId) => {
 
 const trimTrailingSlash = (value: string) => value.replace(/\/$/, '');
 
+const isValidPlanId = (value?: string): value is PlanId => {
+  return value === 'starter' || value === 'growth' || value === 'premium';
+};
+
+const persistPendingCheckout = async (userId: string, email: string, planId: PlanId, paymentLinkId: string, referenceId: string) => {
+  try {
+    await db.collection(USER_SUBSCRIPTIONS_COLLECTION).doc(userId).set(
+      {
+        userId,
+        email,
+        pendingPlan: planId,
+        pendingPaymentLinkId: paymentLinkId,
+        pendingReferenceId: referenceId,
+        updatedAt: admin.firestore.Timestamp.now(),
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.warn('Skipping pending subscription sync because Firestore Admin is unavailable:', error);
+  }
+};
+
+const persistVerifiedPlan = async (userId: string, email: string, planId: PlanId, paymentId: string) => {
+  const subscriptionRef = db.collection(USER_SUBSCRIPTIONS_COLLECTION).doc(userId);
+  const subscriptionSnapshot = await subscriptionRef.get();
+  const subscriptionData = (subscriptionSnapshot.exists ? subscriptionSnapshot.data() : null) as SubscriptionSnapshot | null;
+
+  const now = new Date();
+  const currentPlanExpiresAt = subscriptionData?.planExpiresAt?.toDate();
+  const extensionBaseDate =
+    subscriptionData?.activePlan === planId &&
+    currentPlanExpiresAt &&
+    currentPlanExpiresAt > now
+      ? currentPlanExpiresAt
+      : now;
+  const expiresAt = new Date(extensionBaseDate);
+  expiresAt.setDate(expiresAt.getDate() + 30);
+
+  await subscriptionRef.set(
+    {
+      userId,
+      email,
+      status: 'active',
+      activePlan: planId,
+      planActivatedAt: admin.firestore.Timestamp.fromDate(now),
+      planExpiresAt: admin.firestore.Timestamp.fromDate(expiresAt),
+      pendingPlan: null,
+      pendingPaymentLinkId: null,
+      pendingReferenceId: null,
+      lastPaymentId: paymentId,
+      updatedAt: admin.firestore.Timestamp.fromDate(now),
+    },
+    { merge: true }
+  );
+
+  return expiresAt;
+};
+
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'healthy', timestamp: new Date() });
 });
@@ -150,17 +213,7 @@ app.post('/api/billing/create-payment-link', requireAuth, async (req: Authentica
       }),
     });
 
-    await db.collection(USER_SUBSCRIPTIONS_COLLECTION).doc(userId).set(
-      {
-        userId,
-        email,
-        pendingPlan: planId,
-        pendingPaymentLinkId: paymentLink.id,
-        pendingReferenceId: referenceId,
-        updatedAt: admin.firestore.Timestamp.now(),
-      },
-      { merge: true }
-    );
+    await persistPendingCheckout(userId, email, planId, paymentLink.id, referenceId);
 
     return res.json({
       planId,
@@ -203,29 +256,6 @@ app.post('/api/billing/verify-payment-link', requireAuth, async (req: Authentica
   }
 
   try {
-    const subscriptionRef = db.collection(USER_SUBSCRIPTIONS_COLLECTION).doc(userId);
-    const subscriptionSnapshot = await subscriptionRef.get();
-
-    if (!subscriptionSnapshot.exists) {
-      return res.status(404).json({ error: 'Subscription profile not found.' });
-    }
-
-    const subscriptionData = subscriptionSnapshot.data() as {
-      activePlan?: PlanId;
-      planExpiresAt?: admin.firestore.Timestamp;
-      pendingPlan?: PlanId;
-      pendingPaymentLinkId?: string;
-      pendingReferenceId?: string;
-    };
-
-    if (
-      subscriptionData.pendingPaymentLinkId !== razorpay_payment_link_id ||
-      subscriptionData.pendingReferenceId !== razorpay_payment_link_reference_id ||
-      !subscriptionData.pendingPlan
-    ) {
-      return res.status(400).json({ error: 'This payment does not match the pending plan checkout.' });
-    }
-
     const paymentLink = await callRazorpay<RazorpayPaymentLinkResponse>(`/payment_links/${razorpay_payment_link_id}`, {
       method: 'GET',
     });
@@ -238,40 +268,26 @@ app.post('/api/billing/verify-payment-link', requireAuth, async (req: Authentica
       return res.status(400).json({ error: 'Payment reference does not match.' });
     }
 
-    if (paymentLink.notes?.userId !== userId || paymentLink.notes?.planId !== subscriptionData.pendingPlan) {
+    const verifiedPlanId = paymentLink.notes?.planId;
+
+    if (paymentLink.notes?.userId !== userId || !isValidPlanId(verifiedPlanId)) {
       return res.status(400).json({ error: 'Payment link verification failed for this user.' });
     }
 
-    const now = new Date();
-    const currentPlanExpiresAt = subscriptionData.planExpiresAt?.toDate();
-    const extensionBaseDate =
-      subscriptionData.activePlan === subscriptionData.pendingPlan &&
-      currentPlanExpiresAt &&
-      currentPlanExpiresAt > now
-        ? currentPlanExpiresAt
-        : now;
-    const expiresAt = new Date(extensionBaseDate);
+    let expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 30);
 
-    await subscriptionRef.set(
-      {
-        status: 'active',
-        activePlan: subscriptionData.pendingPlan,
-        planActivatedAt: admin.firestore.Timestamp.fromDate(now),
-        planExpiresAt: admin.firestore.Timestamp.fromDate(expiresAt),
-        pendingPlan: null,
-        pendingPaymentLinkId: null,
-        pendingReferenceId: null,
-        lastPaymentId: razorpay_payment_id,
-        updatedAt: admin.firestore.Timestamp.fromDate(now),
-      },
-      { merge: true }
-    );
+    try {
+      expiresAt = await persistVerifiedPlan(userId, req.user?.email || '', verifiedPlanId, razorpay_payment_id);
+    } catch (error) {
+      console.warn('Skipping server-side subscription update because Firestore Admin is unavailable:', error);
+    }
 
     return res.json({
       success: true,
-      planId: subscriptionData.pendingPlan,
+      planId: verifiedPlanId,
       expiresAt: expiresAt.toISOString(),
+      paymentId: razorpay_payment_id,
     });
   } catch (error) {
     console.error('Failed to verify payment link:', error);
