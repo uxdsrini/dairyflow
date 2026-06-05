@@ -1,4 +1,5 @@
 import { User } from 'firebase/auth';
+import { Capacitor } from '@capacitor/core';
 import {
   Timestamp,
   collection,
@@ -15,6 +16,7 @@ import { PlanId, UserSubscriptionProfile } from '../types';
 
 const COLLECTION = 'userSubscriptions';
 const CONFIGURED_API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const CONFIGURED_APP_BASE_URL = (import.meta.env.VITE_APP_BASE_URL || '').replace(/\/$/, '');
 const API_BASE_URL = import.meta.env.DEV ? '' : CONFIGURED_API_BASE_URL;
 const BILLING_UNAVAILABLE_MESSAGE = import.meta.env.DEV
   ? 'Billing service is unavailable. Run `npm run dev` to start both frontend and backend.'
@@ -27,6 +29,41 @@ export interface BillingCallbackPayload {
   razorpay_payment_link_status: string;
   razorpay_signature?: string;
 }
+
+const isNativePlatform = () => Capacitor.isNativePlatform();
+
+const getBillingConfigurationError = () => {
+  if (import.meta.env.DEV) {
+    return null;
+  }
+
+  if (!isNativePlatform()) {
+    return null;
+  }
+
+  if (!CONFIGURED_API_BASE_URL) {
+    return 'Billing is not configured for this APK yet. Set `VITE_API_BASE_URL` to your public backend URL and rebuild the app.';
+  }
+
+  return null;
+};
+
+export const getBillingAppBaseUrl = () => {
+  if (CONFIGURED_APP_BASE_URL) {
+    return CONFIGURED_APP_BASE_URL;
+  }
+
+  return window.location.origin;
+};
+
+const getBillingApiBaseUrl = () => {
+  const configurationError = getBillingConfigurationError();
+  if (configurationError) {
+    throw new Error(configurationError);
+  }
+
+  return API_BASE_URL;
+};
 
 const addDays = (date: Date, days: number) => {
   const copy = new Date(date);
@@ -186,6 +223,13 @@ const parseJsonResponse = async <T>(response: Response) => {
   try {
     return JSON.parse(raw) as T;
   } catch {
+    const looksLikeHtml = /<!doctype html|<html[\s>]/i.test(raw);
+    const configurationError = getBillingConfigurationError();
+
+    if (looksLikeHtml && configurationError) {
+      throw new Error(configurationError);
+    }
+
     throw new Error(
       response.ok
         ? 'Billing service returned an unreadable response.'
@@ -230,9 +274,10 @@ const activateVerifiedPlan = async (
 };
 
 export const createPaymentLink = async (user: User, planId: PlanId, appBaseUrl: string) => {
+  const apiBaseUrl = getBillingApiBaseUrl();
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}/api/billing/create-payment-link`, {
+    response = await fetch(`${apiBaseUrl}/api/billing/create-payment-link`, {
       method: 'POST',
       headers: await getAuthHeaders(user),
       body: JSON.stringify({ planId, appBaseUrl }),
@@ -251,9 +296,10 @@ export const createPaymentLink = async (user: User, planId: PlanId, appBaseUrl: 
 };
 
 export const verifyPaymentLink = async (user: User, callbackPayload: BillingCallbackPayload) => {
+  const apiBaseUrl = getBillingApiBaseUrl();
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}/api/billing/verify-payment-link`, {
+    response = await fetch(`${apiBaseUrl}/api/billing/verify-payment-link`, {
       method: 'POST',
       headers: await getAuthHeaders(user),
       body: JSON.stringify(callbackPayload),

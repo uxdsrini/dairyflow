@@ -5,6 +5,7 @@ import {
   BillingCallbackPayload,
   createPaymentLink,
   ensureUserSubscriptionProfile,
+  getBillingAppBaseUrl,
   getDaysRemaining,
   getEffectivePlan,
   isBillingCallbackPayload,
@@ -221,7 +222,7 @@ export const SubscriptionProvider: React.FC<{ children: React.ReactNode }> = ({ 
         clearPostUpgradeAction();
       }
 
-      const response = await createPaymentLink(currentUser, planId, window.location.origin);
+      const response = await createPaymentLink(currentUser, planId, getBillingAppBaseUrl());
       window.location.assign(response.shortUrl);
     } catch (error) {
       console.error('Failed to start checkout:', error);

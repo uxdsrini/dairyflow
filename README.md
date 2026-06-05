@@ -48,6 +48,7 @@ cp server/.env.example server/.env
 
 Required billing variables:
 - `VITE_API_BASE_URL`: Base URL for the Express API, usually `http://localhost:5001`
+- `VITE_APP_BASE_URL`: Public web app URL used for Razorpay callback redirects (for example `https://dairyflow-blue.vercel.app`)
 - `RAZORPAY_KEY_ID`: Razorpay API key ID
 - `RAZORPAY_KEY_SECRET`: Razorpay API key secret
 
@@ -71,6 +72,42 @@ npm run seed
 ```
 
 *Note: Ensure the backend server is running before executing the seed command.*
+
+---
+
+## ☁️ Deploy Backend on Render
+
+This repo includes a Render Blueprint file at `render.yaml` for the Express billing backend in `server/`.
+
+### Create the Render Web Service
+1. Push this repo to GitHub.
+2. In Render, create a new **Web Service** from the repo.
+3. Render can auto-detect the included `render.yaml`, or you can enter these values manually:
+   - Root Directory: `server`
+   - Runtime: `Node`
+   - Build Command: `npm install && npm run build`
+   - Start Command: `npm start`
+   - Health Check Path: `/api/health`
+
+### Set Render Environment Variables
+Add these environment variables in the Render Dashboard:
+- `RAZORPAY_KEY_ID`
+- `RAZORPAY_KEY_SECRET`
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_PRIVATE_KEY`
+
+For `FIREBASE_PRIVATE_KEY`, paste the full private key including `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----`.
+
+### Connect Mobile/Web Billing
+After Render gives you a public backend URL such as `https://dairyflow-api.onrender.com`, update your frontend env:
+
+```bash
+VITE_API_BASE_URL=https://your-render-backend.onrender.com
+VITE_APP_BASE_URL=https://dairyflow-blue.vercel.app
+```
+
+Then rebuild the frontend and Android app so Razorpay payments work from the APK.
 
 ---
 
