@@ -50,17 +50,17 @@ const UpgradeModal: React.FC = () => {
       onClose={closeUpgradeModal}
       title="Choose Your DairyFlow Plan"
       size="xl"
-      contentClassName="h-[100dvh] max-h-[100dvh] rounded-none sm:h-[min(92vh,940px)] sm:max-h-[min(92vh,940px)] sm:max-w-[min(1180px,calc(100vw-2rem))] sm:rounded-[32px] overflow-hidden flex flex-col shadow-2xl"
-      headerClassName="px-5 py-4 sm:px-7 sm:py-5 lg:px-8 bg-white/95 backdrop-blur-sm"
-      bodyClassName="p-0 flex-1 min-h-0 overflow-hidden"
+      contentClassName="h-[calc(100dvh-2rem)] max-h-[calc(100dvh-2rem)] rounded-[28px] sm:h-[min(92vh,940px)] sm:max-h-[min(92vh,940px)] sm:max-w-[min(1180px,calc(100vw-2rem))] sm:rounded-[32px] overflow-hidden flex flex-col shadow-2xl"
+      headerClassName="px-4 py-3.5 sm:px-7 sm:py-5 lg:px-8 bg-white/95 backdrop-blur-sm"
+      bodyClassName="p-0 flex-1 min-h-0 overflow-y-auto"
     >
-      <div className="flex h-full min-h-0 flex-col">
-        <div className="border-b border-gray-100 px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
-          <div className="rounded-[28px] border border-dairy-100 bg-gradient-to-r from-dairy-50/90 via-emerald-50/50 to-white p-4 sm:p-5 lg:p-6">
-            <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+      <div className="flex min-h-full flex-col">
+        <div className="border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-5 lg:px-8">
+          <div className="rounded-[24px] border border-dairy-100 bg-gradient-to-r from-dairy-50/90 via-emerald-50/50 to-white p-3.5 sm:rounded-[28px] sm:p-5 lg:p-6">
+            <div className="flex flex-col gap-3 sm:gap-4 xl:flex-row xl:items-start xl:justify-between">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-lg font-semibold text-gray-900 sm:text-xl">{upgradeModalState.title}</span>
+                  <span className="text-base font-semibold text-gray-900 sm:text-xl">{upgradeModalState.title}</span>
                   {subscription?.status === 'trial' && trialDaysLeft > 0 && (
                     <span className="badge-green">{trialDaysLeft} days of Premium trial left</span>
                   )}
@@ -68,17 +68,17 @@ const UpgradeModal: React.FC = () => {
                     <span className="badge-green">{planDaysLeft} billing days remaining</span>
                   )}
                 </div>
-                <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-600 sm:text-base">
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600 sm:mt-3 sm:leading-7 sm:text-base">
                   {upgradeModalState.description}
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-2 xl:max-w-sm xl:justify-end">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 shadow-sm">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-white px-2.5 py-1 text-[11px] font-medium text-gray-600 shadow-sm sm:px-3 sm:py-1.5 sm:text-xs">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                   Razorpay payments
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-100 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 shadow-sm">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-100 bg-white px-2.5 py-1 text-[11px] font-medium text-gray-600 shadow-sm sm:px-3 sm:py-1.5 sm:text-xs">
                   UPI, PhonePe, Google Pay, Paytm, Cards
                 </span>
               </div>
@@ -86,7 +86,7 @@ const UpgradeModal: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+        <div className="px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {PLAN_ORDER.map((planId) => {
               const plan = PLAN_DEFINITIONS[planId];
@@ -98,7 +98,7 @@ const UpgradeModal: React.FC = () => {
               return (
                 <div
                   key={plan.id}
-                  className={`relative flex h-full min-h-[520px] flex-col overflow-hidden rounded-[28px] border p-5 sm:p-6 ${
+                  className={`relative flex flex-col overflow-hidden rounded-[28px] border p-4 sm:p-6 md:min-h-[520px] ${
                     isRecommended ? planThemes.premium.accent : theme.accent
                   } ${plan.id === 'premium' ? 'md:col-span-2 xl:col-span-1' : ''}`}
                 >
@@ -111,7 +111,7 @@ const UpgradeModal: React.FC = () => {
                       {planIcons[plan.id]}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-[1.9rem] font-bold leading-none tracking-tight text-gray-900">{plan.name}</h3>
+                      <h3 className="text-[1.7rem] font-bold leading-none tracking-tight text-gray-900 sm:text-[1.9rem]">{plan.name}</h3>
                       <p className="mt-2 text-sm leading-6 text-gray-500 sm:text-base">{plan.tagline}</p>
                     </div>
                   </div>
@@ -123,39 +123,41 @@ const UpgradeModal: React.FC = () => {
                   </div>
 
                   <div className="mt-5">
-                    <div className="text-5xl font-bold tracking-tight text-gray-950">₹{plan.price}</div>
+                    <div className="text-[3.25rem] font-bold tracking-tight text-gray-950 sm:text-5xl">₹{plan.price}</div>
                     <div className="mt-2 text-lg text-gray-500">per month</div>
                   </div>
 
-                  <p className="mt-5 min-h-[96px] text-[15px] leading-7 text-gray-600">
+                  <p className="mt-4 text-[15px] leading-7 text-gray-600 md:min-h-[96px]">
                     {plan.summary}
                   </p>
 
-                  <div className={`mt-5 rounded-2xl border bg-white/70 p-4 ${theme.panel}`}>
-                    <div className="mb-3 flex items-center justify-between gap-3">
-                      <span className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">Includes</span>
-                      <span className="text-xs font-medium text-gray-500">{plan.features.length} features</span>
+                  <div className="mt-5 flex flex-col gap-4 md:mt-auto">
+                    <div className="order-1 md:order-2">
+                      <button
+                        onClick={() => startCheckout(plan.id)}
+                        disabled={checkoutLoadingPlan === plan.id}
+                        className={`${isRecommended ? 'btn-primary' : theme.button} flex w-full min-h-[54px] items-center justify-center gap-2 text-base font-semibold sm:min-h-[56px]`}
+                      >
+                        {checkoutLoadingPlan === plan.id && <Loader2 className="w-4 h-4 animate-spin" />}
+                        {isCurrentPlan ? `Renew ${plan.name}` : `Purchase ${plan.name}`}
+                      </button>
                     </div>
 
-                    <div className="space-y-3 lg:max-h-[320px] lg:overflow-y-auto lg:pr-1 scrollbar-hide">
-                      {plan.features.map((feature) => (
-                        <div key={feature} className="flex items-start gap-2.5 text-sm text-gray-700 sm:text-[15px]">
-                          <Check className="mt-0.5 h-4 w-4 flex-none text-emerald-600" />
-                          <span className="leading-6">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                    <div className={`order-2 rounded-2xl border bg-white/70 p-4 ${theme.panel} md:order-1`}>
+                      <div className="mb-3 flex items-center justify-between gap-3">
+                        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">Includes</span>
+                        <span className="text-xs font-medium text-gray-500">{plan.features.length} features</span>
+                      </div>
 
-                  <div className="mt-auto pt-5">
-                    <button
-                      onClick={() => startCheckout(plan.id)}
-                      disabled={checkoutLoadingPlan === plan.id}
-                      className={`${isRecommended ? 'btn-primary' : theme.button} w-full flex min-h-[56px] items-center justify-center gap-2 text-base font-semibold`}
-                    >
-                      {checkoutLoadingPlan === plan.id && <Loader2 className="w-4 h-4 animate-spin" />}
-                      {isCurrentPlan ? `Renew ${plan.name}` : `Purchase ${plan.name}`}
-                    </button>
+                      <div className="space-y-3">
+                        {plan.features.map((feature) => (
+                          <div key={feature} className="flex items-start gap-2.5 text-sm text-gray-700 sm:text-[15px]">
+                            <Check className="mt-0.5 h-4 w-4 flex-none text-emerald-600" />
+                            <span className="leading-6">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               );
@@ -163,8 +165,8 @@ const UpgradeModal: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-t border-gray-100 px-4 py-4 sm:px-6 lg:px-8">
-          <p className="text-xs leading-6 text-gray-500 sm:text-sm">
+        <div className="border-t border-gray-100 px-4 py-3 sm:px-6 lg:px-8">
+          <p className="text-[11px] leading-5 text-gray-500 sm:text-sm sm:leading-6">
             Registered users get a 30-day Premium trial. After that, DairyFlow shows this upgrade flow and activates the selected plan after Razorpay confirms payment.
           </p>
         </div>

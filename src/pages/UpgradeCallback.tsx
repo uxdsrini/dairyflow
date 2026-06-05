@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { consumePostUpgradeAction } from '../services/postUpgradeActionService';
 
 const UpgradeCallback: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -14,9 +15,16 @@ const UpgradeCallback: React.FC = () => {
 
     void (async () => {
       try {
-        await verifyCheckoutCallback(searchParams);
+        const result = await verifyCheckoutCallback(searchParams);
         if (!mounted) return;
         toast.success('Payment confirmed. Your plan is now active.');
+        const postUpgradeAction = consumePostUpgradeAction();
+
+        if (postUpgradeAction === 'resume_add_customer') {
+          navigate(`/customers?resumeAddCustomer=1&upgradedPlan=${result.planId}`, { replace: true });
+          return;
+        }
+
         navigate('/', { replace: true });
       } catch (error) {
         console.error('Failed to verify payment callback:', error);

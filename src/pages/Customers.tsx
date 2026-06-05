@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Search, Edit2, Trash2, Phone, MapPin, Download } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { Customer } from '../types';
 import { getCustomers, addCustomer, updateCustomer, deleteCustomer } from '../services/customerService';
 import Modal from '../components/ui/Modal';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { getCustomerLimit } from '../config/plans';
 import * as XLSX from 'xlsx';
 
 const CUSTOMER_TYPE_LABELS: Record<Customer['customerType'], string> = {
@@ -23,6 +25,7 @@ const STATUS_LABELS: Record<Customer['status'], string> = {
 const Customers: React.FC = () => {
   const { currentUser } = useAuth();
   const { isCustomerLimitReached } = useSubscription();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +57,38 @@ const Customers: React.FC = () => {
   useEffect(() => {
     filterCustomers();
   }, [customers, searchQuery, statusFilter, typeFilter, routeFilter]);
+
+  useEffect(() => {
+    const shouldResumeAddCustomer = searchParams.get('resumeAddCustomer') === '1';
+    if (!shouldResumeAddCustomer || loading) {
+      return;
+    }
+
+    const upgradedPlan = searchParams.get('upgradedPlan');
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete('resumeAddCustomer');
+    nextParams.delete('upgradedPlan');
+    setSearchParams(nextParams, { replace: true });
+
+    const upgradedPlanLimit =
+      upgradedPlan === 'starter' || upgradedPlan === 'growth' || upgradedPlan === 'premium'
+        ? getCustomerLimit(upgradedPlan)
+        : undefined;
+
+    if (upgradedPlanLimit === null || (typeof upgradedPlanLimit === 'number' && customers.length < upgradedPlanLimit)) {
+      resetForm();
+      setIsModalOpen(true);
+      toast.success('Plan upgraded. You can add your next customer now.');
+      return;
+    }
+
+    if (isCustomerLimitReached(customers.length)) {
+      return;
+    }
+
+    resetForm();
+    setIsModalOpen(true);
+  }, [customers.length, isCustomerLimitReached, loading, searchParams, setSearchParams]);
 
   const loadCustomers = async () => {
     setLoading(true);

@@ -1,32 +1,34 @@
-<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 1024 1024">
+  <!-- Generator: Adobe Illustrator 30.4.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 226)  -->
   <defs>
-    <linearGradient id="bg" x1="152" y1="112" x2="888" y2="912" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#0F6A34"/>
-      <stop offset="1" stop-color="#22C55E"/>
+    <style>
+      .st0 {
+        fill: url(#linear-gradient1);
+      }
+
+      .st1 {
+        fill: none;
+        stroke: url(#linear-gradient);
+        stroke-width: 8px;
+      }
+
+      .st2 {
+        fill: #fff;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="512" y1="830" x2="512" y2="202" gradientTransform="translate(0 1026) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff" stop-opacity=".3"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </linearGradient>
-    <linearGradient id="glow" x1="512" y1="196" x2="512" y2="824" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFFFFF" stop-opacity="0.3"/>
-      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    <linearGradient id="linear-gradient1" x1="147.67" y1="910.01" x2="883.67" y2="110.01" gradientTransform="translate(0 1026) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#106b37"/>
+      <stop offset="1" stop-color="#44b65e"/>
     </linearGradient>
-    <filter id="shadow" x="176" y="150" width="672" height="724" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-      <feOffset dy="28"/>
-      <feGaussianBlur stdDeviation="30"/>
-      <feColorMatrix type="matrix" values="0 0 0 0 0.0431 0 0 0 0 0.251 0 0 0 0 0.1216 0 0 0 0.22 0"/>
-      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1"/>
-      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1" result="shape"/>
-    </filter>
   </defs>
-  <rect x="64" y="64" width="896" height="896" rx="224" fill="url(#bg)"/>
-  <circle cx="786" cy="238" r="92" fill="#FFFFFF" fill-opacity="0.08"/>
-  <circle cx="256" cy="812" r="126" fill="#FFFFFF" fill-opacity="0.06"/>
-  <rect x="112" y="112" width="800" height="800" rx="192" stroke="url(#glow)" stroke-width="8"/>
-  <g filter="url(#shadow)">
-    <path d="M512 236C512 236 350 428.233 350 578.64C350 678.762 422.529 760 512 760C601.471 760 674 678.762 674 578.64C674 428.233 512 236 512 236Z" fill="white"/>
-    <path d="M444 520C476.5 491.5 523 476.5 585 482.5" stroke="#16A34A" stroke-width="40" stroke-linecap="round"/>
-    <path d="M428 610C472 573 532 561 610 570" stroke="#15803D" stroke-width="34" stroke-linecap="round" opacity="0.92"/>
-    <path d="M454 704C493 681 533 671 578 672" stroke="#65A30D" stroke-width="28" stroke-linecap="round" opacity="0.95"/>
-    <circle cx="622" cy="412" r="28" fill="#DCFCE7"/>
+  <rect class="st1" x="112" y="112" width="800" height="800" rx="192" ry="192"/>
+  <g>
+    <rect class="st0" x="64" y="64" width="896" height="896" rx="224" ry="224"/>
+    <path class="st2" d="M512,296.88s-133.01,157.84-133.01,281.33c0,82.21,59.55,148.91,133.01,148.91s133.01-66.7,133.01-148.91c0-123.5-133.01-281.33-133.01-281.33ZM447.51,520.19c15.22-13.35,33.36-23.04,53.92-28.79,21.39-5.99,45.54-7.74,71.78-5.2,7.22.7,12.51,7.12,11.81,14.34-.7,7.22-7.12,12.51-14.34,11.81-44.45-4.31-80.06,4.98-105.85,27.59-2.49,2.19-5.58,3.26-8.66,3.26-3.65,0-7.29-1.51-9.88-4.48-4.78-5.45-4.24-13.75,1.22-18.54ZM565.9,668c-35.08-.78-65.23,6.99-94.85,24.46-2.1,1.23-4.39,1.82-6.66,1.82-4.5,0-8.88-2.31-11.33-6.47-3.69-6.25-1.61-14.3,4.64-17.99,33.55-19.78,69.13-28.97,108.78-28.09,7.25.16,13,6.17,12.84,13.43-.16,7.25-6.18,13.04-13.43,12.84ZM590.96,584.17c-61.53-7.1-107.15,2.66-139.47,29.85-2.46,2.07-5.46,3.08-8.45,3.08-3.74,0-7.46-1.59-10.06-4.68-4.67-5.55-3.95-13.84,1.6-18.51,38.16-32.09,90.3-43.81,159.4-35.84,7.21.83,12.38,7.35,11.54,14.56s-7.35,12.39-14.56,11.54Z"/>
   </g>
 </svg>

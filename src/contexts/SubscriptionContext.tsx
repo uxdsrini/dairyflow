@@ -11,6 +11,7 @@ import {
   subscribeToUserPlan,
   verifyPaymentLink,
 } from '../services/accountPlanService';
+import { clearPostUpgradeAction, savePostUpgradeAction } from '../services/postUpgradeActionService';
 import { PlanId, UserSubscriptionProfile } from '../types';
 import { useAuth } from './AuthContext';
 
@@ -38,7 +39,7 @@ interface SubscriptionContextType {
   openUpgradeModal: (featureKey?: FeatureKey) => void;
   closeUpgradeModal: () => void;
   startCheckout: (planId: PlanId) => Promise<void>;
-  verifyCheckoutCallback: (searchParams: URLSearchParams) => Promise<void>;
+  verifyCheckoutCallback: (searchParams: URLSearchParams) => Promise<{ planId: PlanId; expiresAt: string; paymentId?: string }>;
   isCustomerLimitReached: (customerCount: number) => boolean;
 }
 
@@ -214,10 +215,17 @@ export const SubscriptionProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     setCheckoutLoadingPlan(planId);
     try {
+      if (upgradeModalState.reason === 'limit_reached') {
+        savePostUpgradeAction('resume_add_customer');
+      } else {
+        clearPostUpgradeAction();
+      }
+
       const response = await createPaymentLink(currentUser, planId, window.location.origin);
       window.location.assign(response.shortUrl);
     } catch (error) {
       console.error('Failed to start checkout:', error);
+      clearPostUpgradeAction();
       toast.error((error as Error).message || 'Unable to open Razorpay checkout');
     } finally {
       setCheckoutLoadingPlan(null);
@@ -241,8 +249,9 @@ export const SubscriptionProvider: React.FC<{ children: React.ReactNode }> = ({ 
       razorpay_signature: searchParams.get('razorpay_signature') || undefined,
     };
 
-    await verifyPaymentLink(currentUser, payload);
+    const result = await verifyPaymentLink(currentUser, payload);
     closeUpgradeModal();
+    return result;
   };
 
   return (
